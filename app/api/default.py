@@ -1,8 +1,10 @@
 from fastapi.params import Depends
 from fastapi_jwt_auth import AuthJWT
 from starlette.responses import FileResponse
+from pydantic import ValidationError
 
-from app.validators.schemes.user_schemes import UserScheme
+from app.validators.schemes.login_scheme import LoginScheme
+from app.validators.schemes.patient_create_scheme import RegisterScheme
 from app.database.users import UsersCollection
 from app.main import app
 from fastapi import APIRouter
@@ -17,8 +19,31 @@ def init():
     return FileResponse('./static/index.html')
 
 
+@router.post('/register')
+def register(user: RegisterScheme):
+    try:
+        registered_user = UsersCollection.insert_obj({
+                "email": user.email,
+                "password1": user.password1,
+                "password2": user.password2,
+                "role": user.role,
+                "name": user.name,
+                "surname": user.surname,
+                "phone_number": user.phone_number,
+                "patronymic": user.patronymic,
+                "gender": user.gender,
+                "birthday": user.birthday
+            }
+        )
+    except ValidationError as e:
+        return {"result": False, "msg": e}
+    if registered_user:
+        return {"result": True, 'user_id': str(registered_user['_id'])}
+    return {"result": False, "msg": "Invalid credentials"}
+
+
 @router.post('/login')
-def login(user: UserScheme, Authorize: AuthJWT = Depends()):
+def login(user: LoginScheme, Authorize: AuthJWT = Depends()):
     registered_user = UsersCollection.get_one_obj({"email": user.email})
     if registered_user:
         password_correct = UsersCollection.verify_password(user.password, registered_user['password'])

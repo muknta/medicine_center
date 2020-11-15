@@ -19,6 +19,7 @@ google = "*"
 typing_extensions = "*"
 aiofiles = "*"
 passlib = {extras = ["bcrypt"],version = "*"}
+pipfile = "*"
 
 [requires]
 python_version = "3.7"

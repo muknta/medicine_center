@@ -11,18 +11,20 @@ void main() {
   initDependencies();
   runApp(
     GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        initialRoute: Routes.Login,
-        // theme: appThemeData,
-        defaultTransition: Transition.fade,
-        getPages: [
+      debugShowCheckedModeBanner: false,
+      initialRoute: Routes.Login,
+      // theme: appThemeData,
+      defaultTransition: Transition.fade,
+      getPages: [
         GetPage(
           name: Routes.Login,
           page: () => LoginScreen(),
           binding: LoginBinding(),
         ),
-      ]));
-  }
+      ]
+    )
+  );
+}
 
 initDependencies(){
   Get.put(ApiClient());
@@ -32,8 +34,16 @@ initDependencies(){
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar:AppBar(title:Text('Medecine app')),
-      body: Column(children: <Widget>[Text('Medecine application')]));
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Medecine app')
+      ),
+      body: Column(
+        children: <Widget>[
+          Text('Medecine application')
+        ]
+      )
+    );
   }
 }
 

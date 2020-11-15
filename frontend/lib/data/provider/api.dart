@@ -35,7 +35,26 @@ class ApiClient {
         'Authorization': 'Authorization-Token $refreshToken'
       });
 
-  Future login(email, password) async {
+  Future register(String email, String password1, String password2, String name,
+                  String surname, String role, String phone_number,
+                  String patronymic, String gender, DateTime birthday) async {
+    Response response = await _dio.post(
+      '/register',
+      data: {
+        'email': email, 'password1': password1, 'password2': password2,
+        'name': name, 'surname': surname, 'role': role, 'phone_number': phone_number,
+        'patronomyc': patronomyc, 'gender': gender, 'birthday': birthday
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.data);
+      if (response.data["result"] == true) {
+        return response;
+      }
+    }
+  }
+
+  Future login(String email, String password) async {
     Response response = await _dio.post(
       '/login',
       data: {'email': email, 'password': password},
