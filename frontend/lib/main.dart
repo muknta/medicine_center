@@ -14,7 +14,7 @@ void main() {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: Routes.Login,
+      initialRoute: Routes.Register,
       // theme: appThemeData,
       defaultTransition: Transition.fade,
       getPages: [

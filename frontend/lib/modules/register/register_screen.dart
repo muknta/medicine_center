@@ -230,9 +230,9 @@ class RegisterScreen extends GetView<RegisterController> {
                         _buildTF('Patronymic'),
                         SizedBox(height: 30.0),
                         _buildTF('Phone Number'),
-                        Spacer(),
+                        SizedBox(height: 30.0),
                         _buildTF('Gender'),
-                        Spacer(),
+                        SizedBox(height: 30.0),
                         DateTimeFormField(
                           initialValue: _birthday,
                           label: "Birthday",
