@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator, ValidationError
-import datetime.date
+import datetime
 import re
 
 
@@ -7,11 +7,10 @@ class RegisterScheme(BaseModel):
     email: str
     password1: str
     password2: str
-    role: str
     name: str
     surname: str
-    phone_number: str
     patronymic: str
+    phone_number: str
     gender: str
     birthday: datetime.date
 
@@ -23,9 +22,11 @@ class RegisterScheme(BaseModel):
 
     @validator('password1')
     def is_valid_password(cls, v):
-        if len(v) >= 6 and re.match(r"[a-zA-Z0-9]", v):
-        	return v
-        raise ValueError('Password must consist of uppercase, lowercase, numerical with 6 chars minimal length.')
+    	min_len = 6
+    	if len(v) >= min_len and re.match(r"[a-zA-Z0-9]", v):
+    		return v
+    	raise ValueError(
+        	f'Password must consist of uppercase, lowercase, numerical with {min_len} chars minimal length.')
 
     @validator('password2')
     def are_passwords_match(cls, v, values, **kwargs):
@@ -39,9 +40,7 @@ class RegisterScheme(BaseModel):
         	return v
         raise ValueError("Choose gender between 'male', 'female' or 'custom'.")
 
-    @validator('name')
-    @validator('surname')
-    @validator('patronymic')
+    @validator('name', 'surname', 'patronymic')
     def check_name(cls, v):
         if re.match(r"[a-zA-Z]", v):
         	return v

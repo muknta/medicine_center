@@ -24,15 +24,14 @@ def register(user: RegisterScheme):
     try:
         registered_user = UsersCollection.insert_obj({
                 "email": user.email,
-                "password1": user.password1,
-                "password2": user.password2,
-                "role": user.role,
+                "password": user.password1,
                 "name": user.name,
                 "surname": user.surname,
-                "phone_number": user.phone_number,
                 "patronymic": user.patronymic,
+                "phone_number": user.phone_number,
                 "gender": user.gender,
-                "birthday": user.birthday
+                "birthday": user.birthday,
+                "role": 'patient'
             }
         )
     except ValidationError as e:

@@ -1,7 +1,6 @@
 class PatientModel {
   final int id;
-  final String email, password1, password2, name;
-  final String surname, phone_number, patronymic, gender;
+  final String email, name, surname, patronymic, phone_number, gender;
   final DateTime birthday;
 
   PatientModel(this.id, [this.email, this.name, this.surname,

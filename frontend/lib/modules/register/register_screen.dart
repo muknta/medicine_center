@@ -41,10 +41,34 @@ class RegisterScreen extends GetView<RegisterController> {
   final genderController = TextEditingController();
   // final DateTime _now = new DateTime.now(); // need to define at initState()
   DateTime _birthday = new DateTime(
-    DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      DateTime.now().year, DateTime.now().month, DateTime.now().day
+    );
 
 
-  getControllerByTitle(String title) {
+  _getInputTypeByTitle(String title) {
+    switch(title) {
+      case 'Email': { TextInputType.emailAddress; }
+      break;
+      case 'Password1': { TextInputType.visiblePassword; }
+      break;
+      case 'Password2': { TextInputType.visiblePassword; }
+      break;
+      case 'Name': { TextInputType.name; }
+      break;
+      case 'Surname': { TextInputType.name; }
+      break;
+      case 'Patronymic': { TextInputType.name; }
+      break;
+      case 'Phone Number': { TextInputType.phone; }
+      break;
+      case 'Gender': { TextInputType.text; }
+      break;
+      default: { print('Invalid title of widget - ${title}'); }
+      break;
+    }
+  }
+
+  _getControllerByTitle(String title) {
     switch(title) {
       case 'Email': { emailController; }
       break;
@@ -62,7 +86,7 @@ class RegisterScreen extends GetView<RegisterController> {
       break;
       case 'Gender': { genderController; }
       break;
-      default: { print('Invalid title of widget'); }
+      default: { print('Invalid title of widget - ${title}'); }
       break;
     }
   }
@@ -82,12 +106,12 @@ class RegisterScreen extends GetView<RegisterController> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
-            keyboardType: TextInputType.emailAddress,
+            keyboardType: _getInputTypeByTitle(title),
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
-            controller: getControllerByTitle(title),
+            controller: _getControllerByTitle(title),
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
@@ -206,8 +230,6 @@ class RegisterScreen extends GetView<RegisterController> {
                         _buildTF('Patronymic'),
                         SizedBox(height: 30.0),
                         _buildTF('Phone Number'),
-                        SizedBox(height: 30.0),
-                        _buildTF('Role'),
                         Spacer(),
                         _buildTF('Gender'),
                         Spacer(),
