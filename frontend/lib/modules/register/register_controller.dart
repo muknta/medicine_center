@@ -8,20 +8,23 @@ class RegisterController extends GetxController {
   UserRepository _userRepository = Get.find<UserRepository>();
 
   final String title = 'Register';
-  UserModel get userModel => _userRepository.userModel;
+  PatientModel get patientModel => _userRepository.patientModel;
 
   @override
   void onInit() {
     super.onInit();
   }
 
-  Future<UserModel> register(String email, String password1, String password2, String name,
-                  String surname, String role, String phone_number,
+  Future<PatientModel> register(String email, String password1, String password2,
+                  String name, String surname, String phone_number,
                   String patronymic, String gender, DateTime birthday) async {
     try {
-      UserModel userModel = await _userRepository.register(email, password);
-      if (userModel != null) {
-        return userModel;
+      PatientModel patientModel = await _userRepository.register(
+                  email, password1, password2, name,
+                  surname, patronymic, phone_number,
+                  gender, birthday);
+      if (patientModel != null) {
+        return patientModel;
       } else {
         Get.snackbar(
             'Invalid credentials', 'Please enter correct data');

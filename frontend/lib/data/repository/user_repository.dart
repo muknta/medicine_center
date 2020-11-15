@@ -10,9 +10,12 @@ class UserRepository extends GetxService {
   PatientModel patientModel;
 
   Future register(String email, String password1, String password2, String name,
-                  String surname, String role, String phone_number,
-                  String patronymic, String gender, DateTime birthday) async {
-    Response response = await _apiClient.register(email, password);
+                  String surname, String patronymic, String phone_number,
+                  String gender, DateTime birthday) async {
+    Response response = await _apiClient.register(
+                  email, password1, password2, name,
+                  surname, patronymic, phone_number,
+                  gender, birthday);
     if (response != null) {
       this.patientModel = PatientModel.fromJson(response.data);
       return patientModel;

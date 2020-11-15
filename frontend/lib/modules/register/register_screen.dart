@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:medecine_app/data/models/user_model.dart';
+import 'package:flutter_datetime_formfield/flutter_datetime_formfield.dart';
+import 'package:medecine_app/data/models/patient_model.dart';
 
 import 'register_controller.dart';
+
 
 final kHintTextStyle = TextStyle(
   color: Colors.white54,
@@ -30,19 +32,48 @@ final kBoxDecorationStyle = BoxDecoration(
 
 class RegisterScreen extends GetView<RegisterController> {
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final password1Controller = TextEditingController();
+  final password2Controller = TextEditingController();
   final nameController = TextEditingController();
+  final surnameController = TextEditingController();
+  final patronymicController = TextEditingController();
   final phoneController = TextEditingController();
-  final roleController = TextEditingController();
   final genderController = TextEditingController();
-  final birthdayController;
+  // final DateTime _now = new DateTime.now(); // need to define at initState()
+  DateTime _birthday = new DateTime(
+    DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-  Widget _buildEmailTF() {
+
+  getControllerByTitle(String title) {
+    switch(title) {
+      case 'Email': { emailController; }
+      break;
+      case 'Password1': { password1Controller; }
+      break;
+      case 'Password2': { password1Controller; }
+      break;
+      case 'Name': { nameController; }
+      break;
+      case 'Surname': { surnameController; }
+      break;
+      case 'Patronymic': { patronymicController; }
+      break;
+      case 'Phone Number': { phoneController; }
+      break;
+      case 'Gender': { genderController; }
+      break;
+      default: { print('Invalid title of widget'); }
+      break;
+    }
+  }
+
+
+  Widget _buildTF(String title) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Email',
+          title,
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
@@ -56,7 +87,7 @@ class RegisterScreen extends GetView<RegisterController> {
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
-            controller: emailController,
+            controller: getControllerByTitle(title),
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
@@ -64,7 +95,7 @@ class RegisterScreen extends GetView<RegisterController> {
                 Icons.email,
                 color: Colors.white,
               ),
-              hintText: 'Enter your Email',
+              hintText: 'Enter ${title}',
               hintStyle: kHintTextStyle,
             ),
           ),
@@ -73,49 +104,13 @@ class RegisterScreen extends GetView<RegisterController> {
     );
   }
 
-  Widget _buildPasswordTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Password',
-          style: kLabelStyle,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            controller: passwordController,
-            obscureText: true,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.lock,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Password',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoginBtn() {
+  Widget _buildRegisterBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => _login(),
+        onPressed: () => _register(),
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -137,10 +132,12 @@ class RegisterScreen extends GetView<RegisterController> {
 
   // TODO: Add validator
   Future _register() async {
-    UserModel userModel =
-        await controller.register(emailController.text, passwordController.text);
-    if (userModel != null) {
-      Get.snackbar('Success', 'Patient account created!');
+    PatientModel patientModel =
+        await controller.register(emailController.text, password1Controller.text, password2Controller.text,
+                      nameController.text, surnameController.text, patronymicController.text,
+                      phoneController.text, genderController.text, _birthday);
+    if (patientModel != null) {
+      Get.snackbar('Success', 'Patient account has been created!');
     } else {
       print('Something went wrong on registration');
     }
@@ -196,13 +193,36 @@ class RegisterScreen extends GetView<RegisterController> {
                           ),
                         ),
                         SizedBox(height: 30.0),
-                        _buildEmailTF(),
-                        SizedBox(
-                          height: 30.0,
+                        _buildTF('Email'),
+                        SizedBox(height: 30.0),
+                        _buildTF('Password1'),
+                        SizedBox(height: 30.0),
+                        _buildTF('Password2'),
+                        SizedBox(height: 30.0),
+                        _buildTF('Name'),
+                        SizedBox(height: 30.0),
+                        _buildTF('Surname'),
+                        SizedBox(height: 30.0),
+                        _buildTF('Patronymic'),
+                        SizedBox(height: 30.0),
+                        _buildTF('Phone Number'),
+                        SizedBox(height: 30.0),
+                        _buildTF('Role'),
+                        Spacer(),
+                        _buildTF('Gender'),
+                        Spacer(),
+                        DateTimeFormField(
+                          initialValue: _birthday,
+                          label: "Birthday",
+                          validator: (DateTime dateTime) {
+                            if (dateTime == null) {
+                              return "Date Time Required";
+                            }
+                            return null;
+                          },
+                          onSaved: (DateTime dateTime) => _birthday = dateTime,
                         ),
-                        _buildPasswordTF(),
-                        _buildForgotPasswordBtn(),
-                        _buildLoginBtn(),
+                        _buildRegisterBtn(),
                       ],
                     ),
                   ),

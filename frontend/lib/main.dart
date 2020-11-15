@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:medecine_app/data/repository/user_repository.dart';
 import 'package:medecine_app/modules/login/login_binding.dart';
 import 'package:medecine_app/modules/login/login_screen.dart';
+import 'package:medecine_app/modules/register/register_binding.dart';
+import 'package:medecine_app/modules/register/register_screen.dart';
 import 'package:medecine_app/routes.dart';
 
 import 'data/provider/api.dart';
@@ -20,6 +22,11 @@ void main() {
           name: Routes.Login,
           page: () => LoginScreen(),
           binding: LoginBinding(),
+        ),
+        GetPage(
+          name: Routes.Register,
+          page: () => RegisterScreen(),
+          binding: RegisterBinding(),
         ),
       ]
     )
