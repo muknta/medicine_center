@@ -11,11 +11,11 @@ class UserRepository extends GetxService {
 
   Future register(String email, String password1, String password2, String name,
                   String surname, String patronymic, String phone_number,
-                  String gender, DateTime birthday) async {
+                  String gender) async { //, DateTime birthday
     Response response = await _apiClient.register(
                   email, password1, password2, name,
                   surname, patronymic, phone_number,
-                  gender, birthday);
+                  gender); //, birthday
     if (response != null) {
       this.patientModel = PatientModel.fromJson(response.data);
       return patientModel;

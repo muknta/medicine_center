@@ -37,13 +37,13 @@ class ApiClient {
 
   Future register(String email, String password1, String password2,
                   String name, String surname, String patronymic,
-                  String phone_number, String gender, DateTime birthday) async {
+                  String phone_number, String gender) async { //, DateTime birthday
     Response response = await _dio.post(
       '/register',
       data: {
         'email': email, 'password1': password1, 'password2': password2,
         'name': name, 'surname': surname, 'patronymic': patronymic, 
-        'phone_number': phone_number, 'gender': gender, 'birthday': birthday
+        'phone_number': phone_number, 'gender': gender//, 'birthday': birthday
       },
     );
     if (response.statusCode == 200) {

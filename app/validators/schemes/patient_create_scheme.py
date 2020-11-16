@@ -12,11 +12,12 @@ class RegisterScheme(BaseModel):
     patronymic: str
     phone_number: str
     gender: str
-    birthday: datetime.date
+    # birthday: datetime.date
 
     @validator('email')
     def is_valid_email(cls, v):
-        if re.match(r"[\w-\.]+@([\w-]+\.)+[\w-]{2,4}", v):
+        # if re.match(r"[\w-\.]+@([\w-]+\.)+[\w-]{2,4}", v):
+        if re.match(r"[a-zA-Z]+@+[a-zA-Z]+\.+[a-zA-Z]{2,4}]", v):
         	return v
         raise ValueError('Invalid email.')
 

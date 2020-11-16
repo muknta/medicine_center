@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
 import 'package:flutter_datetime_formfield/flutter_datetime_formfield.dart';
+import 'package:intl/intl.dart';
+
 import 'package:medecine_app/data/models/patient_model.dart';
 
 import 'register_controller.dart';
@@ -39,6 +42,7 @@ class RegisterScreen extends GetView<RegisterController> {
   final patronymicController = TextEditingController();
   final phoneController = TextEditingController();
   final genderController = TextEditingController();
+  final birthdayController = TextEditingController();
   // final DateTime _now = new DateTime.now(); // need to define at initState()
   DateTime _birthday = new DateTime(
       DateTime.now().year, DateTime.now().month, DateTime.now().day
@@ -63,6 +67,8 @@ class RegisterScreen extends GetView<RegisterController> {
       break;
       case 'Gender': { TextInputType.text; }
       break;
+      case 'Birthday': { TextInputType.datetime; }
+      break;
       default: { print('Invalid title of widget - ${title}'); }
       break;
     }
@@ -85,6 +91,8 @@ class RegisterScreen extends GetView<RegisterController> {
       case 'Phone Number': { phoneController; }
       break;
       case 'Gender': { genderController; }
+      break;
+      case 'Birthday': { birthdayController; }
       break;
       default: { print('Invalid title of widget - ${title}'); }
       break;
@@ -128,6 +136,55 @@ class RegisterScreen extends GetView<RegisterController> {
     );
   }
 
+  // Widget _buildDateTimeTF(String title) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: <Widget>[
+  //       Text(
+  //         title,
+  //         style: kLabelStyle,
+  //       ),
+  //       SizedBox(height: 10.0),
+  //       Container(
+  //         alignment: Alignment.centerLeft,
+  //         decoration: kBoxDecorationStyle,
+  //         height: 60.0,
+  //         child: TextField(
+  //           keyboardType: TextInputType.datetime,
+  //           style: TextStyle(
+  //             color: Colors.white,
+  //             fontFamily: 'OpenSans',
+  //           ),
+  //           decoration: InputDecoration(
+  //             border: InputBorder.none,
+  //             contentPadding: EdgeInsets.only(top: 14.0),
+  //             prefixIcon: Icon(
+  //               Icons.email,
+  //               color: Colors.white,
+  //             ),
+  //             hintText: 'Enter ${title}',
+  //             hintStyle: kHintTextStyle,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  Widget _buildCustomDateTimeTF() {
+    return DateTimeFormField(
+      initialValue: _birthday,
+      label: "Birthday",
+      validator: (DateTime dateTime) {
+        if (dateTime == null) {
+          return "Date Time Required";
+        }
+        return null;
+      },
+      onSaved: (DateTime dateTime) => _birthday = dateTime,
+    );
+  }
+
   Widget _buildRegisterBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -159,7 +216,9 @@ class RegisterScreen extends GetView<RegisterController> {
     PatientModel patientModel =
         await controller.register(emailController.text, password1Controller.text, password2Controller.text,
                       nameController.text, surnameController.text, patronymicController.text,
-                      phoneController.text, genderController.text, _birthday);
+                      phoneController.text, genderController.text);
+                      // DateFormat("yyyy-MM-dd").format(DateTime.now()));
+                      // DateTime.parse(birthdayController.text));
     if (patientModel != null) {
       Get.snackbar('Success', 'Patient account has been created!');
     } else {
@@ -232,18 +291,9 @@ class RegisterScreen extends GetView<RegisterController> {
                         _buildTF('Phone Number'),
                         SizedBox(height: 30.0),
                         _buildTF('Gender'),
-                        SizedBox(height: 30.0),
-                        DateTimeFormField(
-                          initialValue: _birthday,
-                          label: "Birthday",
-                          validator: (DateTime dateTime) {
-                            if (dateTime == null) {
-                              return "Date Time Required";
-                            }
-                            return null;
-                          },
-                          onSaved: (DateTime dateTime) => _birthday = dateTime,
-                        ),
+                        // SizedBox(height: 30.0),
+                        
+                        // _buildTF('Birthday'),
                         _buildRegisterBtn(),
                       ],
                     ),
