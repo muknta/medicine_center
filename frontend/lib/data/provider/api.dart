@@ -46,8 +46,9 @@ class ApiClient {
         'phone_number': phone_number, 'gender': gender//, 'birthday': birthday
       },
     );
+    print('api.dart: response - ${response}');
     if (response.statusCode == 200) {
-      print(response.data);
+      print('api.dart: response.data - ${response.data}');
       if (response.data["result"] == true) {
         return response;
       }

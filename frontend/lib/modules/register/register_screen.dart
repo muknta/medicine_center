@@ -51,50 +51,139 @@ class RegisterScreen extends GetView<RegisterController> {
 
   _getInputTypeByTitle(String title) {
     switch(title) {
-      case 'Email': { TextInputType.emailAddress; }
+      case 'Email': { return TextInputType.emailAddress; }
       break;
-      case 'Password1': { TextInputType.visiblePassword; }
+      case 'Password1': { return TextInputType.visiblePassword; }
       break;
-      case 'Password2': { TextInputType.visiblePassword; }
+      case 'Password2': { return TextInputType.visiblePassword; }
       break;
-      case 'Name': { TextInputType.name; }
+      case 'Name': { return TextInputType.name; }
       break;
-      case 'Surname': { TextInputType.name; }
+      case 'Surname': { return TextInputType.name; }
       break;
-      case 'Patronymic': { TextInputType.name; }
+      case 'Patronymic': { return TextInputType.name; }
       break;
-      case 'Phone Number': { TextInputType.phone; }
+      case 'Phone Number': { return TextInputType.phone; }
       break;
-      case 'Gender': { TextInputType.text; }
+      case 'Gender': { return TextInputType.text; }
       break;
-      case 'Birthday': { TextInputType.datetime; }
+      case 'Birthday': { return TextInputType.datetime; }
       break;
-      default: { print('Invalid title of widget - ${title}'); }
+      default: { print('Invalid title of widget - $title'); }
       break;
     }
   }
 
   _getControllerByTitle(String title) {
     switch(title) {
-      case 'Email': { emailController; }
+      case 'Email': { print('got emailController;'); return emailController; }
       break;
-      case 'Password1': { password1Controller; }
+      case 'Password1': { print('got password1Controller;'); return password1Controller; }
       break;
-      case 'Password2': { password1Controller; }
+      case 'Password2': { print('got password2Controller;'); return password2Controller; }
       break;
-      case 'Name': { nameController; }
+      case 'Name': { print('got nameController;'); return nameController; }
       break;
-      case 'Surname': { surnameController; }
+      case 'Surname': { print('got surnameController;'); return surnameController; }
       break;
-      case 'Patronymic': { patronymicController; }
+      case 'Patronymic': { print('got patronymicController;'); return patronymicController; }
       break;
-      case 'Phone Number': { phoneController; }
+      case 'Phone Number': { print('got phoneController;'); return phoneController; }
       break;
-      case 'Gender': { genderController; }
+      case 'Gender': { print('got genderController;'); return genderController; }
       break;
-      case 'Birthday': { birthdayController; }
+      case 'Birthday': { print('got birthdayController;'); return birthdayController; }
       break;
-      default: { print('Invalid title of widget - ${title}'); }
+      default: { print('Invalid title of widget - $title'); }
+      break;
+    }
+  }
+
+  String _validateValueByTitle(String value, String title) {
+    print('frontend validation: val, tit $value, $title');
+    switch(title) {
+      case 'Email': { 
+        RegExp regExp = new RegExp(
+          r"[a-zA-Z0-9]+@+[a-zA-Z0-9]+\.+[a-zA-Z]{2,5}",
+          caseSensitive: true,
+          multiLine: false,
+        );
+        if (!regExp.hasMatch(value)) { return 'Invalid email.'; }
+      }
+      break;
+      case 'Password1':
+      // TODO: Check for Password2 if equals to Password1
+      case 'Password2': {
+        final int minLen = 6;
+        final int maxLen = 30;
+
+        RegExp regExp = new RegExp(
+          "(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{$minLen,$maxLen}'}",
+          caseSensitive: true,
+          multiLine: false,
+        );
+        if (!regExp.hasMatch(value)) {
+          return 'Password must consist of uppercase, lowercase letter, numerical with $minLen-$maxLen chars length.';
+        }
+      }
+      break;
+      case 'Name':
+      case 'Surname':
+      case 'Patronymic': {
+        RegExp regExp = new RegExp(
+          r"[A-Za-z]+",
+          caseSensitive: false,
+          multiLine: false,
+        );
+        if (!regExp.hasMatch(value)) {
+          return "Name must consist of letters only.";
+        }
+      }
+      break;
+      case 'Phone Number': {
+        final int minLen = 6;
+        final int maxLen = 15;
+
+        RegExp regExp = new RegExp(
+          "\+{1,1}?\d{$minLen, $maxLen}",
+          caseSensitive: false,
+          multiLine: false,
+        );
+        if (!regExp.hasMatch(value)) {
+          return "Phone number begins with '+' and the rest ($minLen-$maxLen chars) consists of numbers.";
+        }
+      }
+      break;
+      case 'Gender': {
+        List<String> genderList = ['male', 'female', 'custom'];
+        if (!genderList.contains(value)) {
+          return "Choose gender between $genderList";
+        }
+      }
+      break;
+      default: { print('Invalid title of widget - $title, with value - $value'); }
+      break;
+    }
+  }
+
+  _getIconByTitle(String title) {
+    switch(title) {
+      case 'Email': { return Icons.email; }
+      break;
+      case 'Password1':
+      case 'Password2': { return Icons.vpn_key_rounded; }
+      break;
+      case 'Name':
+      case 'Surname':
+      case 'Patronymic': { return Icons.book_outlined; }
+      break;
+      case 'Phone Number': { return Icons.contact_phone_outlined; }
+      break;
+      case 'Gender': { return Icons.group_rounded; }
+      break;
+      case 'Birthday': { return Icons.cake_rounded; }
+      break;
+      default: { print('Invalid title of widget - $title'); }
       break;
     }
   }
@@ -113,21 +202,23 @@ class RegisterScreen extends GetView<RegisterController> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: TextField(
+          child: TextFormField(
             keyboardType: _getInputTypeByTitle(title),
+            textInputAction: TextInputAction.next,
+            controller: _getControllerByTitle(title),
+            validator: (value) { _validateValueByTitle(value, title); },
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
-            controller: _getControllerByTitle(title),
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
-                Icons.email,
+                _getIconByTitle(title),
                 color: Colors.white,
               ),
-              hintText: 'Enter ${title}',
+              hintText: 'Enter your ${title}',
               hintStyle: kHintTextStyle,
             ),
           ),
@@ -213,6 +304,7 @@ class RegisterScreen extends GetView<RegisterController> {
 
   // TODO: Add validator
   Future _register() async {
+    print('email ${emailController.text} - ${emailController}, pass1 ${password1Controller.text}, pass2 ${password2Controller.text}, name ${nameController.text}, surname ${surnameController.text}, patro ${patronymicController.text}, phone ${phoneController.text}, gender ${genderController.text}');
     PatientModel patientModel =
         await controller.register(emailController.text, password1Controller.text, password2Controller.text,
                       nameController.text, surnameController.text, patronymicController.text,

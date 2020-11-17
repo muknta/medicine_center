@@ -16,8 +16,8 @@ class RegisterController extends GetxController {
   }
 
   Future<PatientModel> register(String email, String password1, String password2,
-                  String name, String surname, String phone_number,
-                  String patronymic, String gender) async { //, DateTime birthday
+                  String name, String surname, String patronymic,
+                  String phone_number, String gender) async { //, DateTime birthday
     try {
       // print('DateTime birthday: ${birthday}');
       PatientModel patientModel = await _userRepository.register(
