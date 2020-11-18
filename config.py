@@ -7,7 +7,8 @@ BASE_DIR = Path(__file__).resolve().parent
 
 DEBUG_LOGIN = True
 
-DB_PASSWORD = os.environ['MONGODB_PASSWORD']
+# DB_PASSWORD = os.environ['MONGODB_PASSWORD']
+DB_PASSWORD = 'mongo'
 DATABASE_NAME = 'med'
 DB_SOURCE = f'mongodb+srv://user:{DB_PASSWORD}@cluster.7pk1k.mongodb.net/{DATABASE_NAME}?retryWrites=true&w=majority'
 ADMIN_EXPIRES_DELTA = timedelta(minutes=5)

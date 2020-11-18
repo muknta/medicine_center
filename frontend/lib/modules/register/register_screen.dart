@@ -34,6 +34,68 @@ final kBoxDecorationStyle = BoxDecoration(
 );
 
 class RegisterScreen extends GetView<RegisterController> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Stack(
+            children: <Widget>[
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xFF73AEF5),
+                      Color(0xFF61A4F1),
+                      Color(0xFF478DE0),
+                      Color(0xFF398AE5),
+                    ],
+                    stops: [0.1, 0.4, 0.7, 0.9],
+                  ),
+                ),
+              ),
+              Center(
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 500),
+                  height: double.infinity,
+                  child: SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 40.0,
+                      vertical: 120.0,
+                    ),
+                    child: RegisterForm(controller),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class RegisterForm extends StatefulWidget {
+  RegisterController controller;
+  
+  RegisterForm(this.controller);
+
+  @override
+  RegisterFormState createState() => RegisterFormState();
+}
+
+class RegisterFormState extends State<RegisterForm> {
+  final _formKey = GlobalKey<FormState>();
+
   final emailController = TextEditingController();
   final password1Controller = TextEditingController();
   final password2Controller = TextEditingController();
@@ -43,6 +105,7 @@ class RegisterScreen extends GetView<RegisterController> {
   final phoneController = TextEditingController();
   final genderController = TextEditingController();
   final birthdayController = TextEditingController();
+
   // final DateTime _now = new DateTime.now(); // need to define at initState()
   DateTime _birthday = new DateTime(
       DateTime.now().year, DateTime.now().month, DateTime.now().day
@@ -109,6 +172,7 @@ class RegisterScreen extends GetView<RegisterController> {
           multiLine: false,
         );
         if (!regExp.hasMatch(value)) { return 'Invalid email.'; }
+        return null;
       }
       break;
       case 'Password1':
@@ -118,13 +182,15 @@ class RegisterScreen extends GetView<RegisterController> {
         final int maxLen = 30;
 
         RegExp regExp = new RegExp(
-          "(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{$minLen,$maxLen}'}",
+          "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]{$minLen,$maxLen}",
           caseSensitive: true,
           multiLine: false,
         );
         if (!regExp.hasMatch(value)) {
+          print(regExp);
           return 'Password must consist of uppercase, lowercase letter, numerical with $minLen-$maxLen chars length.';
         }
+        return null;
       }
       break;
       case 'Name':
@@ -138,20 +204,28 @@ class RegisterScreen extends GetView<RegisterController> {
         if (!regExp.hasMatch(value)) {
           return "Name must consist of letters only.";
         }
+        return null;
       }
       break;
       case 'Phone Number': {
-        final int minLen = 6;
-        final int maxLen = 15;
+        try {
+          final int minLen = 6;
+          final int maxLen = 15;
 
-        RegExp regExp = new RegExp(
-          "\+{1,1}?\d{$minLen, $maxLen}",
-          caseSensitive: false,
-          multiLine: false,
-        );
-        if (!regExp.hasMatch(value)) {
-          return "Phone number begins with '+' and the rest ($minLen-$maxLen chars) consists of numbers.";
+          RegExp regExp = new RegExp(
+            r"\+{1,1}?[0-9]{"+"$minLen,$maxLen}",
+            caseSensitive: false,
+            multiLine: false,
+          );
+          if (!regExp.hasMatch(value)) {
+            print(regExp);
+            return "Phone number begins with '+' and the rest ($minLen-$maxLen chars) consists of numbers.";
+          }
+          return null;
+        } catch(e) {
+          print(e);
         }
+
       }
       break;
       case 'Gender': {
@@ -159,9 +233,13 @@ class RegisterScreen extends GetView<RegisterController> {
         if (!genderList.contains(value)) {
           return "Choose gender between $genderList";
         }
+        return null;
       }
       break;
-      default: { print('Invalid title of widget - $title, with value - $value'); }
+      default: { 
+        print('Invalid title of widget - $title, with value - $value');
+        return null;
+      }
       break;
     }
   }
@@ -189,7 +267,7 @@ class RegisterScreen extends GetView<RegisterController> {
   }
 
 
-  Widget _buildTF(String title) {
+  Widget _buildTFF(String title) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -206,7 +284,7 @@ class RegisterScreen extends GetView<RegisterController> {
             keyboardType: _getInputTypeByTitle(title),
             textInputAction: TextInputAction.next,
             controller: _getControllerByTitle(title),
-            validator: (value) { _validateValueByTitle(value, title); },
+            validator: (value) => _validateValueByTitle(value, title),
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
@@ -262,7 +340,7 @@ class RegisterScreen extends GetView<RegisterController> {
   //   );
   // }
 
-  Widget _buildCustomDateTimeTF() {
+  Widget _buildCustomDateTimeFF() {
     return DateTimeFormField(
       initialValue: _birthday,
       label: "Birthday",
@@ -282,7 +360,16 @@ class RegisterScreen extends GetView<RegisterController> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => _register(),
+        onPressed: () {
+          if (_formKey.currentState.validate()) {
+            Scaffold.of(context)
+                .showSnackBar(SnackBar(content: Text('Data processing...')));
+            _register();
+          } else {
+            Scaffold.of(context)
+                .showSnackBar(SnackBar(content: Text('Invalid Data')));
+          }
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -306,7 +393,7 @@ class RegisterScreen extends GetView<RegisterController> {
   Future _register() async {
     print('email ${emailController.text} - ${emailController}, pass1 ${password1Controller.text}, pass2 ${password2Controller.text}, name ${nameController.text}, surname ${surnameController.text}, patro ${patronymicController.text}, phone ${phoneController.text}, gender ${genderController.text}');
     PatientModel patientModel =
-        await controller.register(emailController.text, password1Controller.text, password2Controller.text,
+        await widget.controller.register(emailController.text, password1Controller.text, password2Controller.text,
                       nameController.text, surnameController.text, patronymicController.text,
                       phoneController.text, genderController.text);
                       // DateFormat("yyyy-MM-dd").format(DateTime.now()));
@@ -318,83 +405,250 @@ class RegisterScreen extends GetView<RegisterController> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFF73AEF5),
-                      Color(0xFF61A4F1),
-                      Color(0xFF478DE0),
-                      Color(0xFF398AE5),
-                    ],
-                    stops: [0.1, 0.4, 0.7, 0.9],
-                  ),
-                ),
-              ),
-              Center(
-                child: Container(
-                  constraints: BoxConstraints(maxWidth: 500),
-                  height: double.infinity,
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 40.0,
-                      vertical: 120.0,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'OpenSans',
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 30.0),
-                        _buildTF('Email'),
-                        SizedBox(height: 30.0),
-                        _buildTF('Password1'),
-                        SizedBox(height: 30.0),
-                        _buildTF('Password2'),
-                        SizedBox(height: 30.0),
-                        _buildTF('Name'),
-                        SizedBox(height: 30.0),
-                        _buildTF('Surname'),
-                        SizedBox(height: 30.0),
-                        _buildTF('Patronymic'),
-                        SizedBox(height: 30.0),
-                        _buildTF('Phone Number'),
-                        SizedBox(height: 30.0),
-                        _buildTF('Gender'),
-                        // SizedBox(height: 30.0),
-                        
-                        // _buildTF('Birthday'),
-                        _buildRegisterBtn(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Sign Up',
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
+          SizedBox(height: 30.0),
+          // _buildTFF('Email'),
+          TextFormField(
+            keyboardType: _getInputTypeByTitle('Email'),
+            textInputAction: TextInputAction.next,
+            controller: _getControllerByTitle('Email'),
+            validator: (value) => _validateValueByTitle(value, 'Email'),
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                _getIconByTitle('Email'),
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Email',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+          SizedBox(height: 30.0),
+          // _buildTFF('Password1'),
+          TextFormField(
+            keyboardType: _getInputTypeByTitle('Password1'),
+            textInputAction: TextInputAction.next,
+            controller: _getControllerByTitle('Password1'),
+            validator: (value) => _validateValueByTitle(value, 'Password1'),
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                _getIconByTitle('Password1'),
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Password1',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+          SizedBox(height: 30.0),
+          // _buildTFF('Password2'),
+          TextFormField(
+            keyboardType: _getInputTypeByTitle('Password2'),
+            textInputAction: TextInputAction.next,
+            controller: _getControllerByTitle('Password2'),
+            validator: (value) => _validateValueByTitle(value, 'Password2'),
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                _getIconByTitle('Password2'),
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Password2',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+          SizedBox(height: 30.0),
+          // _buildTFF('Name'),
+          TextFormField(
+            keyboardType: _getInputTypeByTitle('Name'),
+            textInputAction: TextInputAction.next,
+            controller: _getControllerByTitle('Name'),
+            validator: (value) => _validateValueByTitle(value, 'Name'),
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                _getIconByTitle('Name'),
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Name',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+          SizedBox(height: 30.0),
+          // _buildTFF('Surname'),
+          TextFormField(
+            keyboardType: _getInputTypeByTitle('Surname'),
+            textInputAction: TextInputAction.next,
+            controller: _getControllerByTitle('Surname'),
+            validator: (value) => _validateValueByTitle(value, 'Surname'),
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                _getIconByTitle('Surname'),
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Surname',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+          SizedBox(height: 30.0),
+          // _buildTFF('Patronymic'),
+          TextFormField(
+            keyboardType: _getInputTypeByTitle('Patronymic'),
+            textInputAction: TextInputAction.next,
+            controller: _getControllerByTitle('Patronymic'),
+            validator: (value) => _validateValueByTitle(value, 'Patronymic'),
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                _getIconByTitle('Patronymic'),
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Patronymic',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+          SizedBox(height: 30.0),
+          // _buildTFF('Phone Number'),
+          TextFormField(
+            keyboardType: _getInputTypeByTitle('Phone Number'),
+            // textInputAction: TextInputAction.next,
+            controller: _getControllerByTitle('Phone Number'),
+            validator: (value) => _validateValueByTitle(value, 'Phone Number'),
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                _getIconByTitle('Phone Number'),
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Phone Number',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+          SizedBox(height: 30.0),
+          // _buildTFF('Gender'),
+          TextFormField(
+            keyboardType: _getInputTypeByTitle('Gender'),
+            textInputAction: TextInputAction.next,
+            controller: _getControllerByTitle('Gender'),
+            validator: (value) => _validateValueByTitle(value, 'Gender'),
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                _getIconByTitle('Gender'),
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Gender',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+          // SizedBox(height: 30.0),
+          
+          // _buildTFF('Birthday'),
+          _buildRegisterBtn(),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(vertical: 16.0),
+          //   child: ElevatedButton(
+          //     onPressed: () {
+          //       // Validate returns true if the form is valid, or false
+          //       // otherwise.
+          //       if (_formKey.currentState.validate()) {
+          //         Scaffold.of(context)
+          //             .showSnackBar(SnackBar(content: Text('success of success')));
+          //         _register();
+          //       } else {
+          //         Scaffold.of(context)
+          //             .showSnackBar(SnackBar(content: Text('Invalid Data')));
+          //       }
+          //     },
+          //     child: Text('Submit'),
+          //   ),
+          // ),
+          // RaisedButton(
+          //   onPressed: () {
+          //     if (_formKey.currentState.validate()) {
+          //       Scaffold.of(context)
+          //           .showSnackBar(SnackBar(content: Text('success of success')));
+          //       _register();
+          //     } else {
+          //       Scaffold.of(context)
+          //           .showSnackBar(SnackBar(content: Text('Invalid Data')));
+          //     }
+          //   },
+          //   padding: EdgeInsets.all(15.0),
+          //   shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.circular(30.0),
+          //   ),
+          //   color: Colors.white,
+          //   child: Text(
+          //     'Register',
+          //     style: TextStyle(
+          //       color: Color(0xFF527DAA),
+          //       letterSpacing: 1.5,
+          //       fontSize: 18.0,
+          //       fontWeight: FontWeight.bold,
+          //       fontFamily: 'OpenSans',
+          //     ),
+          //   ),
+          // ),
+        ],
       ),
     );
   }
