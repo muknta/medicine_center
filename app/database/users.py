@@ -10,7 +10,7 @@ class UsersCollection(MongoBase):
     collection_name: str = 'users'
     db_fields: Sequence[Tuple[str]] = (
         '_id', 'email', 'password', 'role', 'name', 'surname',
-        'phone_number', 'patronymic', 'gender') #, 'birthday'
+        'phone_number', 'patronymic', 'gender', 'birthday')
 
     @classmethod
     def verify_password(cls, plain_password, hashed_password):

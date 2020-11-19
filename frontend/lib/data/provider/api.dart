@@ -1,6 +1,7 @@
 import 'dart:async';
-
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
+
 import 'package:medecine_app/data/utils/exceptions.dart';
 
 const String baseUrl = 'http://127.0.0.1:8000/';
@@ -37,13 +38,15 @@ class ApiClient {
 
   Future register(String email, String password1, String password2,
                   String name, String surname, String patronymic,
-                  String phone_number, String gender) async { //, DateTime birthday
+                  String phone_number, String gender, DateTime birthday) async {
+    String birthdayStr = DateFormat("yyyy-MM-dd").format(birthday);
+
     Response response = await _dio.post(
       '/register',
       data: {
         'email': email, 'password1': password1, 'password2': password2,
         'name': name, 'surname': surname, 'patronymic': patronymic, 
-        'phone_number': phone_number, 'gender': gender//, 'birthday': birthday
+        'phone_number': phone_number, 'gender': gender, 'birthday': birthdayStr,
       },
     );
     print('api.dart: response - ${response}');

@@ -30,7 +30,7 @@ def register(user: RegisterScheme):
                 "patronymic": user.patronymic,
                 "phone_number": user.phone_number,
                 "gender": user.gender,
-                # "birthday": user.birthday,
+                "birthday": user.birthday,
                 "role": 'patient'
             }
         )

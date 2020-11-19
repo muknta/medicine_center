@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
-import 'package:flutter_datetime_formfield/flutter_datetime_formfield.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 
 import 'package:medecine_app/data/models/patient_model.dart';
-
 import 'register_controller.dart';
 
 
@@ -267,7 +265,7 @@ class RegisterFormState extends State<RegisterForm> {
   }
 
 
-  Widget _buildTFF(String title) {
+  Widget _buildTextFormField(String title) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -340,18 +338,46 @@ class RegisterFormState extends State<RegisterForm> {
   //   );
   // }
 
-  Widget _buildCustomDateTimeFF() {
-    return DateTimeFormField(
-      initialValue: _birthday,
-      label: "Birthday",
-      validator: (DateTime dateTime) {
-        if (dateTime == null) {
-          return "Date Time Required";
-        }
-        return null;
-      },
-      onSaved: (DateTime dateTime) => _birthday = dateTime,
-    );
+
+  Widget _buildBasicDateField(String title) {
+    final timeFormat = DateFormat("yyyy-MM-dd");
+    final textColor = Colors.white;
+
+    return Column(children: <Widget>[
+      Align(
+        alignment: Alignment.centerLeft,
+        child: RichText(
+          text: TextSpan(
+            children: [
+              WidgetSpan(
+                child: Icon(
+                  _getIconByTitle(title),
+                  color: textColor,
+                ),
+              ),
+              TextSpan(
+                text: ' $title (${timeFormat.pattern})',
+              ),
+            ],
+            style: TextStyle(color: textColor),
+          ),
+        ),
+      ),
+      DateTimeField(
+        format: timeFormat,
+        controller: _getControllerByTitle(title),
+        validator: (value) {
+          if (value == null) return 'Set your Birthday, please';
+        },
+        onShowPicker: (context, currentValue) {
+          return showDatePicker(
+            context: context,
+            firstDate: DateTime(1900),
+            initialDate: currentValue ?? DateTime.now(),
+            lastDate: DateTime(DateTime.now().year));
+        },
+      ),
+    ]);
   }
 
   Widget _buildRegisterBtn() {
@@ -389,13 +415,14 @@ class RegisterFormState extends State<RegisterForm> {
     );
   }
 
-  // TODO: Add validator
-  Future _register() async {
+  Future<void> _register() async {
     print('email ${emailController.text} - ${emailController}, pass1 ${password1Controller.text}, pass2 ${password2Controller.text}, name ${nameController.text}, surname ${surnameController.text}, patro ${patronymicController.text}, phone ${phoneController.text}, gender ${genderController.text}');
+    print('birthdayController ${birthdayController.text}');
     PatientModel patientModel =
         await widget.controller.register(emailController.text, password1Controller.text, password2Controller.text,
                       nameController.text, surnameController.text, patronymicController.text,
-                      phoneController.text, genderController.text);
+                      phoneController.text, genderController.text,
+                      DateFormat("yyyy-MM-dd").parse(birthdayController.text));
                       // DateFormat("yyyy-MM-dd").format(DateTime.now()));
                       // DateTime.parse(birthdayController.text));
     if (patientModel != null) {
@@ -424,7 +451,7 @@ class RegisterFormState extends State<RegisterForm> {
             ),
           ),
           SizedBox(height: 30.0),
-          // _buildTFF('Email'),
+          // _buildTextFormField('Email'),
           TextFormField(
             keyboardType: _getInputTypeByTitle('Email'),
             textInputAction: TextInputAction.next,
@@ -446,7 +473,7 @@ class RegisterFormState extends State<RegisterForm> {
             ),
           ),
           SizedBox(height: 30.0),
-          // _buildTFF('Password1'),
+          // _buildTextFormField('Password1'),
           TextFormField(
             keyboardType: _getInputTypeByTitle('Password1'),
             textInputAction: TextInputAction.next,
@@ -468,7 +495,7 @@ class RegisterFormState extends State<RegisterForm> {
             ),
           ),
           SizedBox(height: 30.0),
-          // _buildTFF('Password2'),
+          // _buildTextFormField('Password2'),
           TextFormField(
             keyboardType: _getInputTypeByTitle('Password2'),
             textInputAction: TextInputAction.next,
@@ -490,7 +517,7 @@ class RegisterFormState extends State<RegisterForm> {
             ),
           ),
           SizedBox(height: 30.0),
-          // _buildTFF('Name'),
+          // _buildTextFormField('Name'),
           TextFormField(
             keyboardType: _getInputTypeByTitle('Name'),
             textInputAction: TextInputAction.next,
@@ -512,7 +539,7 @@ class RegisterFormState extends State<RegisterForm> {
             ),
           ),
           SizedBox(height: 30.0),
-          // _buildTFF('Surname'),
+          // _buildTextFormField('Surname'),
           TextFormField(
             keyboardType: _getInputTypeByTitle('Surname'),
             textInputAction: TextInputAction.next,
@@ -534,7 +561,7 @@ class RegisterFormState extends State<RegisterForm> {
             ),
           ),
           SizedBox(height: 30.0),
-          // _buildTFF('Patronymic'),
+          // _buildTextFormField('Patronymic'),
           TextFormField(
             keyboardType: _getInputTypeByTitle('Patronymic'),
             textInputAction: TextInputAction.next,
@@ -556,7 +583,7 @@ class RegisterFormState extends State<RegisterForm> {
             ),
           ),
           SizedBox(height: 30.0),
-          // _buildTFF('Phone Number'),
+          // _buildTextFormField('Phone Number'),
           TextFormField(
             keyboardType: _getInputTypeByTitle('Phone Number'),
             // textInputAction: TextInputAction.next,
@@ -578,7 +605,7 @@ class RegisterFormState extends State<RegisterForm> {
             ),
           ),
           SizedBox(height: 30.0),
-          // _buildTFF('Gender'),
+          // _buildTextFormField('Gender'),
           TextFormField(
             keyboardType: _getInputTypeByTitle('Gender'),
             textInputAction: TextInputAction.next,
@@ -599,9 +626,11 @@ class RegisterFormState extends State<RegisterForm> {
               hintStyle: kHintTextStyle,
             ),
           ),
-          // SizedBox(height: 30.0),
+          SizedBox(height: 30.0),
+          // _buildCustomDateTimeFF(),
+          _buildBasicDateField('Birthday'),
           
-          // _buildTFF('Birthday'),
+          // _buildTextFormField('Birthday'),
           _buildRegisterBtn(),
           // Padding(
           //   padding: const EdgeInsets.symmetric(vertical: 16.0),

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+
 import 'package:medecine_app/data/models/patient_model.dart';
 import 'package:medecine_app/data/repository/user_repository.dart';
 import 'package:medecine_app/data/utils/exceptions.dart';
@@ -17,13 +18,13 @@ class RegisterController extends GetxController {
 
   Future<PatientModel> register(String email, String password1, String password2,
                   String name, String surname, String patronymic,
-                  String phone_number, String gender) async { //, DateTime birthday
+                  String phone_number, String gender, DateTime birthday) async {
     try {
-      // print('DateTime birthday: ${birthday}');
+      print('DateTime birthday: ${birthday}');
       PatientModel patientModel = await _userRepository.register(
                   email, password1, password2, name,
                   surname, patronymic, phone_number,
-                  gender); //, birthday
+                  gender, birthday);
       if (patientModel != null) {
         return patientModel;
       } else {
@@ -38,7 +39,7 @@ class RegisterController extends GetxController {
         Get.snackbar('Error', 'Connection troubles...');
         print('Dio Error: ${e.message}');
       }
-      // print(e.message);
+      print(e.message);
     }
   }
 }
