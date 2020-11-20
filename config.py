@@ -31,3 +31,5 @@ class JwtSettings(BaseModel):
 
 JSON_KEYS_SERVICE_ACCOUNT = os.path.join(BASE_DIR, 'keys_service_account.json')
 DISEASE_HISTORY_FILES_NAME = 'disease-history-files'
+CLEARED_DIR = r"app/disease_storage/"
+DISEASE_HISTORY_STATE_FILES = ('__init__.py', 'upload_file.py', '__pycache__')

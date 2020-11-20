@@ -1,6 +1,10 @@
 import bson
 import abc
+from bson.objectid import ObjectId
+from bson.errors import InvalidId
+
 from pymongo import MongoClient
+
 from config import DATABASE_NAME, DB_SOURCE
 
 
@@ -42,7 +46,13 @@ class MongoBase(abc.ABC, metaclass=Meta):
 
     @classmethod
     def get_one_obj(cls, filter, projection=None):
-        return cls.collection.find_one(filter, projection=projection)
+        if filter.get('_id'):
+            try:
+                filter['_id'] = ObjectId(filter['_id'])
+            except InvalidId:
+                return
+
+        return cls.to_json(cls.collection.find_one(filter, projection=projection))
 
     @classmethod
     def insert_obj(cls, data: dict):
@@ -68,3 +78,33 @@ class MongoBase(abc.ABC, metaclass=Meta):
     @classmethod
     def delete_all_obj(cls):
         return cls.collection.delete_many({})
+
+    @classmethod
+    def get_objs(cls, filter, fields=db_fields, projection=None):
+
+        res = list(cls.collection.find(filter, projection=projection))
+        res = cls.to_json(res)
+
+        return res
+
+    @staticmethod
+    def to_json(data):
+        if isinstance(data, list):
+            for obj in data:
+                fields = obj.keys()
+                for field in fields:
+                    if isinstance(obj[field], bson.ObjectId):
+                        obj[field] = str(obj[field])
+        elif isinstance(data, dict):
+            fields = data.keys()
+            for field in fields:
+                if isinstance(data[field], bson.ObjectId):
+                    data[field] = str(data[field])
+
+        return data
+
+    @classmethod
+    def get_ids(cls):
+        collection_id = [str(coll_id) for coll_id in cls.collection.find().distinct('_id')]
+
+        return collection_id

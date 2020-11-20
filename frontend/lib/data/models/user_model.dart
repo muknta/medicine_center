@@ -1,12 +1,12 @@
 class UserModel {
   final int id;
-  final String name;
-  final String surname;
+  String role;
 
-  UserModel(this.id, [this.name, this.surname]);
+  UserModel(this.id, this.role);
 
   factory UserModel.fromJson(Map json) {
     final id = json['id'];
-    return UserModel(id);
+    final role = json['role'];
+    return UserModel(id, role);
   }
 }

@@ -131,4 +131,7 @@ dmypy.json
 .vscode
 .idea
 
+
+trash
 keys_service_account.json
+

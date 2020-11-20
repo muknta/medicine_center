@@ -1,11 +1,13 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
 import 'package:medecine_app/data/utils/exceptions.dart';
 
-const String baseUrl = 'http://127.0.0.1:8000/';
-// const String baseUrl = 'http://34.89.129.235/';
+// const String baseUrl = 'http://46.98.246.226/';
+// const String baseUrl = 'http://192.168.1.121:8000/';
+const String baseUrl = 'http://34.89.129.235:80/';
 
 enum http_method { GET, POST }
 
@@ -17,7 +19,7 @@ class ApiClient {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*"
       },
-      connectTimeout: 10000,
+      connectTimeout: 4000,
       validateStatus: (status) {
         return status < 500;
       });
@@ -77,6 +79,17 @@ class ApiClient {
     }
   }
 
+  Future uploadHistoryFile(filePath, historyId) async {
+    FormData formdata = FormData.fromMap({
+      "file": await MultipartFile.fromFile(filePath, filename: '$historyId'),
+    });
+    Response response =
+        await _dio.post("history/uploadfile/$historyId", data: formdata);
+    print(response);
+    print(response.data);
+    return response;
+  }
+
   Future _authenticatedRequest(path,
       {method = http_method.POST, data = const {}}) async {
     Function request;
@@ -85,8 +98,6 @@ class ApiClient {
     } else if (method == http_method.POST) {
       request = () => _dio.post(path, data: data, options: authHeaderOptions);
     }
-    print(accessToken);
-    print('refresh : $_refreshToken');
     Response response = await request();
     if (response.statusCode == 200) {
       return response;
@@ -123,6 +134,41 @@ class ApiClient {
       }
     }
     return response;
+  }
+
+  getAllHospitals() async {
+    return await _authenticatedRequest('/hospitals', method: http_method.GET);
+  }
+
+  getHospitalDoctors(hospitalID) async {
+    return await _authenticatedRequest('/hospital/$hospitalID/doctors/',
+        method: http_method.GET);
+  }
+
+  getAllDoctors() {}
+
+  getDoctorProfile() {}
+
+  getPatientByID(userID) async {
+    print('get patient');
+    return await _authenticatedRequest('/profile/patient/$userID',
+        method: http_method.GET);
+  }
+
+  getDoctorByID(userID) async {
+    print('getdoctror');
+    return await _authenticatedRequest('/profile/doctor/$userID',
+        method: http_method.GET);
+  }
+
+  getDesiaseHistoriesById(String userId) async {
+    return await _authenticatedRequest('history/$userId',
+        method: http_method.GET);
+  }
+
+  downloadHistoryFile(String historyId) async {
+    return await _authenticatedRequest('history/download/$historyId',
+        method: http_method.GET);
   }
 }
 

@@ -51,7 +51,8 @@ def login(user: LoginScheme, Authorize: AuthJWT = Depends()):
             refresh_token = Authorize.create_refresh_token(subject=registered_user['email'])
             if not DEBUG_LOGIN:
                 app.state.redis.save_tokens(Authorize.get_jti(access_token), Authorize.get_jti(refresh_token))
-            return {"access_token": access_token, "refresh_token": refresh_token, "result": True, 'user_id': str(registered_user['_id'])}
+            return {"access_token": access_token, "refresh_token": refresh_token, "result": True,
+                    "user_id": str(registered_user["_id"]), "role": registered_user["role"]}
     return {"result": False, "msg": "Invalid credentials"}
 
 
