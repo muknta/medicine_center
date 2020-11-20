@@ -64,7 +64,7 @@ class UserRepository extends GetxService {
   }
 
   Future getDiseaseHistoryByUserId(String userId) async {
-    Response response = await _apiClient.getDesiaseHistoriesById(userId);
+    Response response = await _apiClient.getDiseaseHistoriesById(userId);
     if (response != null) {
       print(response.data);
       Map data = response.data;

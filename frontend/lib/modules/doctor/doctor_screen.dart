@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-=======
 import 'package:get/get.dart';
 import 'package:medecine_app/modules/doctor/doctor_controller.dart';
->>>>>>> NazarKostetskiy-master
 import 'package:medecine_app/ui/appbar/base_appbar.dart';
 import 'package:medecine_app/ui/buttons/call_button.dart';
 import 'package:medecine_app/ui/buttons/email_button.dart';
 
-<<<<<<< HEAD
-class DoctorScreen extends StatelessWidget {
-=======
+
 class DoctorScreen extends GetView<DoctorController> {
->>>>>>> NazarKostetskiy-master
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,21 +28,16 @@ class DoctorScreen extends GetView<DoctorController> {
               SizedBox(
                 height: 16,
               ),
-<<<<<<< HEAD
-              Text(
-                "Dr. Stefeni Albert is a cardiologist in Nashville & affiliated with multiple hospitals in the  area.He received his medical degree from Duke University School of Medicine and has been in practice for more than 20 years. ",
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              ),
-=======
-              Obx(
-                () => Text("Gender: ${controller?.userData?.value?.gender}",
-                    style: TextStyle(color: Colors.grey, fontSize: 16)),
+              Obx(() => Text(
+                    "Gender: ${controller?.userData?.value?.gender}",
+                    style: TextStyle(color: Colors.grey, fontSize: 16)
+                  ),
               ),
               Obx(() => Text(
                     "Phone number: ${controller?.userData?.value?.phoneNumber}",
                     style: TextStyle(color: Colors.grey, fontSize: 16),
-                  )),
->>>>>>> NazarKostetskiy-master
+                  ),
+              ),
               SizedBox(
                 height: 24,
               ),
@@ -179,18 +168,13 @@ class DoctorScreen extends GetView<DoctorController> {
                       height: 3,
                     ),
                     Container(
-                        width: MediaQuery.of(context).size.width - 268,
-<<<<<<< HEAD
-                        child: Text(
-                          "Hospital №4, Solomyantska street 16, Kyiv",
-                          style: TextStyle(color: Colors.grey),
-                        ))
-=======
-                        child: Obx(() => Text(
-                              "${controller?.userData?.value?.hospitalId}",
-                              style: TextStyle(color: Colors.grey),
-                            )))
->>>>>>> NazarKostetskiy-master
+                      width: MediaQuery.of(context).size.width - 268,
+                      child: Obx(() => Text(
+                            "${controller?.userData?.value?.hospitalId}",
+                            style: TextStyle(color: Colors.grey),
+                          )
+                      )
+                    )
                   ],
                 )
               ],
@@ -198,7 +182,6 @@ class DoctorScreen extends GetView<DoctorController> {
             SizedBox(
               height: 20,
             ),
-//
           ],
         ),
         Image.asset(
@@ -227,16 +210,6 @@ class DoctorScreen extends GetView<DoctorController> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-<<<<<<< HEAD
-                Text(
-                  "Dr. Stefeni Albert",
-                  style: TextStyle(fontSize: 32),
-                ),
-                Text(
-                  "Heart Speailist",
-                  style: TextStyle(fontSize: 19, color: Colors.grey),
-                ),
-=======
                 Obx(() => Text(
                       "${controller?.userData?.value?.name}  ${controller?.userData?.value?.surname}",
                       style: TextStyle(fontSize: 32),
@@ -249,20 +222,14 @@ class DoctorScreen extends GetView<DoctorController> {
                       "Rating: ${controller?.userData?.value?.rating ?? ''}",
                       style: TextStyle(fontSize: 19, color: Colors.grey),
                     )),
->>>>>>> NazarKostetskiy-master
                 SizedBox(
                   height: 40,
                 ),
                 Row(
                   children: <Widget>[
-<<<<<<< HEAD
-                    CallButton(phoneNumber: '380951651241'),
-                    EmailButton(email: 'fpm.km73@gmail.com'),
-=======
                     Obx(() => CallButton(
                         phoneNumber: controller?.userData?.value?.phoneNumber)),
                     EmailButton(email: controller?.userData?.value?.email),
->>>>>>> NazarKostetskiy-master
                   ],
                 )
               ],
@@ -285,11 +252,12 @@ class IconTile extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(right: 16),
       child: Container(
-          height: 45,
-          width: 45,
-          decoration: BoxDecoration(
-              color: backColor, borderRadius: BorderRadius.circular(15)),
-          child: iconButton),
+        height: 45,
+        width: 45,
+        decoration: BoxDecoration(
+            color: backColor, borderRadius: BorderRadius.circular(15)
+        ),
+        child: iconButton),
     );
   }
 }

@@ -9,6 +9,7 @@ class DiseaseHistoryModel {
     this.diagnosis,
     this.status,
     this.content,
+    this.fileName,
   });
 
   String id;
@@ -20,10 +21,11 @@ class DiseaseHistoryModel {
   String diagnosis;
   String status;
   String content;
+  String fileName;
 
   factory DiseaseHistoryModel.fromJson(Map<String, dynamic> json) =>
       DiseaseHistoryModel(
-        id: json["id"],
+        id: json["_id"],
         authorId: json["author_id"],
         patientId: json["patient_id"],
         title: json["title"],
@@ -32,6 +34,7 @@ class DiseaseHistoryModel {
         diagnosis: json["diagnosis"],
         status: json["status"],
         content: json["content"],
+        fileName: json["file_name"],
       );
 
   Map<String, dynamic> toJson() => {

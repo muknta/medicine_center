@@ -88,142 +88,139 @@ class PatientScreen extends GetView<PatientController> {
         Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
-            ),
-            color: Color(0xFF73AEF5),
-            child: new InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () => showDialog(
-                  context: Get.context,
-                  builder: (context) => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                                height: 500,
-                                child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    child: buildDesieaseHistory()))
-                          ])),
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            color: Color.fromRGBO(144, 202, 249, 1),
-                            borderRadius: BorderRadius.circular(16)),
-                        child: Icon(Icons.list_alt)),
-                    SizedBox(
-                      width: 16,
+          ),
+          color: Color(0xFF73AEF5),
+          child: new InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: () => showDialog(
+                context: Get.context,
+                builder: (context) => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                              height: 500,
+                              child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  child: buildDesieaseHistory()))
+                        ])),
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          color: Color.fromRGBO(144, 202, 249, 1),
+                          borderRadius: BorderRadius.circular(16)),
+                      child: Icon(Icons.list_alt)),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: Text(
+                      "Disease History",
+                      style: TextStyle(color: Colors.white, fontSize: 17),
                     ),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: Text(
-                        "Disease History",
-                        style: TextStyle(color: Colors.white, fontSize: 17),
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
-            )),
-        // )
+            ),
+          )
+        ),
       ],
     );
   }
 
-<<<<<<< HEAD
-=======
   Obx buildDesieaseHistory() {
     return Obx(() => Container(
-          height: MediaQuery.of(Get.context).size.height / 2,
-          child: ListView.builder(
-              itemCount: controller.diseaseHistories.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                    padding: EdgeInsets.all(18),
-                    child: Card(
-                        // color: Color(0xFF73AEF5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(40.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Icon(FlutterIcons.medicinebox_ant),
-                              Expanded(
-                                  child: Container(
-                                padding: EdgeInsets.only(left: 5),
-                                child: Column(children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: controller
-                                                  .diseaseHistories[index]
-                                                  .value
-                                                  .title,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Text(
-                                        '${controller.diseaseHistories[index].value.content}',
+      height: MediaQuery.of(Get.context).size.height / 2,
+      child: ListView.builder(
+        itemCount: controller.diseaseHistories.length,
+        itemBuilder: (context, index) {
+          return Padding(
+              padding: EdgeInsets.all(18),
+              child: Card(
+                  // color: Color(0xFF73AEF5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(40.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(FlutterIcons.medicinebox_ant),
+                        Expanded(
+                            child: Container(
+                          padding: EdgeInsets.only(left: 5),
+                          child: Column(children: [
+                            Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                              children: <Widget>[
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: controller
+                                            .diseaseHistories[index]
+                                            .value
+                                            .title,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),
-                                ]),
-                              )),
-                              Column(
-                                children: [
-                                  RaisedButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0)),
-                                      onPressed: () => controller
-                                          .downloadHistoryFile(controller
-                                              .diseaseHistories[index]
-                                              .value
-                                              .id),
-                                      child: Column(children: [
-                                        Icon(Icons.download_sharp),
-                                        Text('download')
-                                      ])),
-                                  RaisedButton(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                    onPressed: () async =>
-                                        controller.uploadFile(controller
-                                            .diseaseHistories[index].value.id),
-                                    child: Column(children: [
-                                      Icon(FlutterIcons.file_upload_faw5s),
-                                      Text('upload')
-                                    ]),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        )));
-              }),
-        ));
+                                ),
+                                Text(
+                                  '${controller.diseaseHistories[index].value.content}',
+                                ),
+                              ],
+                            ),
+                          ]),
+                        )),
+                        Column(
+                          children: [
+                            RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(20.0)),
+                              onPressed: () => controller
+                                  .downloadHistoryFile(controller
+                                      .diseaseHistories[index]
+                                      .value
+                                      .id),
+                              child: Column(children: [
+                                Icon(Icons.download_sharp),
+                                Text('download')
+                              ])),
+                            RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(20.0)),
+                              onPressed: () async =>
+                                  controller.uploadFile(controller
+                                      .diseaseHistories[index].value.id),
+                              child: Column(children: [
+                                Icon(FlutterIcons.file_upload_faw5s),
+                                Text('upload')
+                              ]),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )));
+        }),
+    ));
   }
 
->>>>>>> NazarKostetskiy-master
   Row buildAddress(BuildContext context) {
     return Row(
       children: <Widget>[
@@ -264,7 +261,6 @@ class PatientScreen extends GetView<PatientController> {
             SizedBox(
               height: 20,
             ),
-//
           ],
         ),
         Image.asset(
@@ -325,7 +321,6 @@ class PatientScreen extends GetView<PatientController> {
                         phoneNumber: controller?.userModel?.value?.phoneNumber))
                   ],
                 ),
-                // )
               ],
             ),
           ),

@@ -28,7 +28,7 @@ class ApiClient {
 
   String _accessToken;
   String _refreshToken;
-  // Todo: get access token from some store
+  // TODO: get access token from some store
   get accessToken => _accessToken;
   get refreshToken => _refreshToken;
 
