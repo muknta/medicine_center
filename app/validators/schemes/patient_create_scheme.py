@@ -12,6 +12,8 @@ class RegisterScheme(BaseModel):
     patronymic: str
     phone_number: str
     gender: str
+    profession: str
+    address: str
     birthday: str
 
     @staticmethod
@@ -71,9 +73,13 @@ class RegisterScheme(BaseModel):
 
     @validator('birthday')
     def is_valid_birthday(cls, v):
-    	datetime_len = 10
-    	try:
-    		datetime.strptime(v[:datetime_len], '%Y-%m-%d').date()
-    		return v
-    	except ValueError:
-    		raise ValueError('Invalid birthday format.')
+        datetime_len = len('yyyy-MM-dd') # 10
+        try:
+            print('v isss',v)
+            datetime_date = datetime.strptime(
+                    v[:datetime_len], '%Y-%m-%d').date()
+            print('datetime_date',datetime_date)
+            print(type(datetime_date))
+            return datetime_date
+        except ValueError:
+            raise ValueError('Invalid birthday format.')

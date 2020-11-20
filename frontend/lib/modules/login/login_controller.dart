@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+
 import 'package:medecine_app/data/models/user_model.dart';
 import 'package:medecine_app/data/repository/user_repository.dart';
 import 'package:medecine_app/data/utils/exceptions.dart';
@@ -8,7 +9,7 @@ class LoginController extends GetxController {
   UserRepository _userRepository = Get.find<UserRepository>();
 
   final String title = 'Login';
-  UserModel get userModel => _userRepository.userModel;
+  Rx get userModel => _userRepository.userModel;
 
   @override
   void onInit() {
@@ -16,9 +17,9 @@ class LoginController extends GetxController {
     // _userRepository.login('test', 'test');
   }
 
-  Future<UserModel> login(String email, String password) async {
+  Future login(String email, String password) async {
     try {
-      UserModel userModel = await _userRepository.login(email, password);
+      var userModel = await _userRepository.login(email, password);
       if (userModel != null) {
         return userModel;
       } else {
@@ -33,7 +34,7 @@ class LoginController extends GetxController {
         Get.snackbar('Error', 'Connection troubles...');
         print('Dio Error: ${e.message}');
       }
-      // print(e.message);
+      print(e);
     }
   }
 }

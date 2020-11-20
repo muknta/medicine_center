@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 
+import 'package:medecine_app/routes.dart';
 import 'package:medecine_app/data/models/patient_model.dart';
 import 'register_controller.dart';
 
@@ -32,7 +33,6 @@ final kBoxDecorationStyle = BoxDecoration(
 );
 
 class RegisterScreen extends GetView<RegisterController> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,13 +102,9 @@ class RegisterFormState extends State<RegisterForm> {
   final patronymicController = TextEditingController();
   final phoneController = TextEditingController();
   final genderController = TextEditingController();
+  final professionController = TextEditingController();
+  final addressController = TextEditingController();
   final birthdayController = TextEditingController();
-
-  // final DateTime _now = new DateTime.now(); // need to define at initState()
-  DateTime _birthday = new DateTime(
-      DateTime.now().year, DateTime.now().month, DateTime.now().day
-    );
-
 
   _getInputTypeByTitle(String title) {
     switch(title) {
@@ -128,34 +124,42 @@ class RegisterFormState extends State<RegisterForm> {
       break;
       case 'Gender': { return TextInputType.text; }
       break;
+      case 'Profession': { return TextInputType.text; }
+      break;
+      case 'Address': { return TextInputType.text; }
+      break;
       case 'Birthday': { return TextInputType.datetime; }
       break;
-      default: { print('Invalid title of widget - $title'); }
+      default: { print('Invalid title of widget - $title'); return null; }
       break;
     }
   }
 
   _getControllerByTitle(String title) {
     switch(title) {
-      case 'Email': { print('got emailController;'); return emailController; }
+      case 'Email': { return emailController; }
       break;
-      case 'Password1': { print('got password1Controller;'); return password1Controller; }
+      case 'Password1': { return password1Controller; }
       break;
-      case 'Password2': { print('got password2Controller;'); return password2Controller; }
+      case 'Password2': { return password2Controller; }
       break;
-      case 'Name': { print('got nameController;'); return nameController; }
+      case 'Name': { return nameController; }
       break;
-      case 'Surname': { print('got surnameController;'); return surnameController; }
+      case 'Surname': { return surnameController; }
       break;
-      case 'Patronymic': { print('got patronymicController;'); return patronymicController; }
+      case 'Patronymic': { return patronymicController; }
       break;
-      case 'Phone Number': { print('got phoneController;'); return phoneController; }
+      case 'Phone Number': { return phoneController; }
       break;
-      case 'Gender': { print('got genderController;'); return genderController; }
+      case 'Gender': { return genderController; }
       break;
-      case 'Birthday': { print('got birthdayController;'); return birthdayController; }
+      case 'Profession': { return professionController; }
       break;
-      default: { print('Invalid title of widget - $title'); }
+      case 'Address': { return addressController; }
+      break;
+      case 'Birthday': { return birthdayController; }
+      break;
+      default: { print('Invalid title of widget - $title'); return null; }
       break;
     }
   }
@@ -234,6 +238,13 @@ class RegisterFormState extends State<RegisterForm> {
         return null;
       }
       break;
+      case 'Profession':
+      case 'Address': {
+        return (value == '')
+          ? 'Fill this field'
+          : null;
+      }
+      break;
       default: { 
         print('Invalid title of widget - $title, with value - $value');
         return null;
@@ -257,6 +268,10 @@ class RegisterFormState extends State<RegisterForm> {
       break;
       case 'Gender': { return Icons.group_rounded; }
       break;
+      case 'Profession': { return Icons.group_rounded; }
+      break;
+      case 'Address': { return Icons.house; }
+      break;
       case 'Birthday': { return Icons.cake_rounded; }
       break;
       default: { print('Invalid title of widget - $title'); }
@@ -274,69 +289,30 @@ class RegisterFormState extends State<RegisterForm> {
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextFormField(
-            keyboardType: _getInputTypeByTitle(title),
-            textInputAction: TextInputAction.next,
-            controller: _getControllerByTitle(title),
-            validator: (value) => _validateValueByTitle(value, title),
-            style: TextStyle(
+        TextFormField(
+          keyboardType: _getInputTypeByTitle(title),
+          textInputAction: TextInputAction.next,
+          controller: _getControllerByTitle(title),
+          validator: (value) => _validateValueByTitle(value, title),
+          obscureText: (title == 'Password2') ? true : false,
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'OpenSans',
+          ),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.only(top: 14.0),
+            prefixIcon: Icon(
+              _getIconByTitle(title),
               color: Colors.white,
-              fontFamily: 'OpenSans',
             ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                _getIconByTitle(title),
-                color: Colors.white,
-              ),
-              hintText: 'Enter your ${title}',
-              hintStyle: kHintTextStyle,
-            ),
+            hintText: 'Enter your ${title}',
+            hintStyle: kHintTextStyle,
           ),
         ),
       ],
     );
   }
-
-  // Widget _buildDateTimeTF(String title) {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: <Widget>[
-  //       Text(
-  //         title,
-  //         style: kLabelStyle,
-  //       ),
-  //       SizedBox(height: 10.0),
-  //       Container(
-  //         alignment: Alignment.centerLeft,
-  //         decoration: kBoxDecorationStyle,
-  //         height: 60.0,
-  //         child: TextField(
-  //           keyboardType: TextInputType.datetime,
-  //           style: TextStyle(
-  //             color: Colors.white,
-  //             fontFamily: 'OpenSans',
-  //           ),
-  //           decoration: InputDecoration(
-  //             border: InputBorder.none,
-  //             contentPadding: EdgeInsets.only(top: 14.0),
-  //             prefixIcon: Icon(
-  //               Icons.email,
-  //               color: Colors.white,
-  //             ),
-  //             hintText: 'Enter ${title}',
-  //             hintStyle: kHintTextStyle,
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
 
 
   Widget _buildBasicDateField(String title) {
@@ -415,17 +391,44 @@ class RegisterFormState extends State<RegisterForm> {
     );
   }
 
+  Widget _buildLoginBtn() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () {
+          Navigator.pushNamed(context, Routes.Login);
+        },
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.white,
+        child: Text(
+          'Log In',
+          style: TextStyle(
+            color: Color(0xFF527DAA),
+            letterSpacing: 1.5,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<void> _register() async {
     print('email ${emailController.text} - ${emailController}, pass1 ${password1Controller.text}, pass2 ${password2Controller.text}, name ${nameController.text}, surname ${surnameController.text}, patro ${patronymicController.text}, phone ${phoneController.text}, gender ${genderController.text}');
     print('birthdayController ${birthdayController.text}');
-    PatientModel patientModel =
+    Rx patientModel =
         await widget.controller.register(emailController.text, password1Controller.text, password2Controller.text,
                       nameController.text, surnameController.text, patronymicController.text,
-                      phoneController.text, genderController.text,
+                      phoneController.text, genderController.text, professionController.text, addressController.text,
                       DateFormat("yyyy-MM-dd").parse(birthdayController.text));
-                      // DateFormat("yyyy-MM-dd").format(DateTime.now()));
-                      // DateTime.parse(birthdayController.text));
     if (patientModel != null) {
+      Navigator.pushNamed(context, Routes.Login);
       Get.snackbar('Success', 'Patient account has been created!');
     } else {
       print('Something went wrong on registration');
@@ -451,232 +454,30 @@ class RegisterFormState extends State<RegisterForm> {
             ),
           ),
           SizedBox(height: 30.0),
-          // _buildTextFormField('Email'),
-          TextFormField(
-            keyboardType: _getInputTypeByTitle('Email'),
-            textInputAction: TextInputAction.next,
-            controller: _getControllerByTitle('Email'),
-            validator: (value) => _validateValueByTitle(value, 'Email'),
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                _getIconByTitle('Email'),
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Email',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
+          _buildTextFormField('Email'),
           SizedBox(height: 30.0),
-          // _buildTextFormField('Password1'),
-          TextFormField(
-            keyboardType: _getInputTypeByTitle('Password1'),
-            textInputAction: TextInputAction.next,
-            controller: _getControllerByTitle('Password1'),
-            validator: (value) => _validateValueByTitle(value, 'Password1'),
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                _getIconByTitle('Password1'),
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Password1',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
+          _buildTextFormField('Password1'),
           SizedBox(height: 30.0),
-          // _buildTextFormField('Password2'),
-          TextFormField(
-            keyboardType: _getInputTypeByTitle('Password2'),
-            textInputAction: TextInputAction.next,
-            controller: _getControllerByTitle('Password2'),
-            validator: (value) => _validateValueByTitle(value, 'Password2'),
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                _getIconByTitle('Password2'),
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Password2',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
+          _buildTextFormField('Password2'),
           SizedBox(height: 30.0),
-          // _buildTextFormField('Name'),
-          TextFormField(
-            keyboardType: _getInputTypeByTitle('Name'),
-            textInputAction: TextInputAction.next,
-            controller: _getControllerByTitle('Name'),
-            validator: (value) => _validateValueByTitle(value, 'Name'),
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                _getIconByTitle('Name'),
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Name',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
+          _buildTextFormField('Name'),
           SizedBox(height: 30.0),
-          // _buildTextFormField('Surname'),
-          TextFormField(
-            keyboardType: _getInputTypeByTitle('Surname'),
-            textInputAction: TextInputAction.next,
-            controller: _getControllerByTitle('Surname'),
-            validator: (value) => _validateValueByTitle(value, 'Surname'),
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                _getIconByTitle('Surname'),
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Surname',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
+          _buildTextFormField('Surname'),
           SizedBox(height: 30.0),
-          // _buildTextFormField('Patronymic'),
-          TextFormField(
-            keyboardType: _getInputTypeByTitle('Patronymic'),
-            textInputAction: TextInputAction.next,
-            controller: _getControllerByTitle('Patronymic'),
-            validator: (value) => _validateValueByTitle(value, 'Patronymic'),
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                _getIconByTitle('Patronymic'),
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Patronymic',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
+          _buildTextFormField('Patronymic'),
           SizedBox(height: 30.0),
-          // _buildTextFormField('Phone Number'),
-          TextFormField(
-            keyboardType: _getInputTypeByTitle('Phone Number'),
-            // textInputAction: TextInputAction.next,
-            controller: _getControllerByTitle('Phone Number'),
-            validator: (value) => _validateValueByTitle(value, 'Phone Number'),
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                _getIconByTitle('Phone Number'),
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Phone Number',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
+          _buildTextFormField('Phone Number'),
           SizedBox(height: 30.0),
-          // _buildTextFormField('Gender'),
-          TextFormField(
-            keyboardType: _getInputTypeByTitle('Gender'),
-            textInputAction: TextInputAction.next,
-            controller: _getControllerByTitle('Gender'),
-            validator: (value) => _validateValueByTitle(value, 'Gender'),
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                _getIconByTitle('Gender'),
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Gender',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
+          _buildTextFormField('Gender'),
           SizedBox(height: 30.0),
-          // _buildCustomDateTimeFF(),
+          _buildTextFormField('Profession'),
+          SizedBox(height: 30.0),
+          _buildTextFormField('Address'),
+          SizedBox(height: 30.0),
           _buildBasicDateField('Birthday'),
           
-          // _buildTextFormField('Birthday'),
           _buildRegisterBtn(),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 16.0),
-          //   child: ElevatedButton(
-          //     onPressed: () {
-          //       // Validate returns true if the form is valid, or false
-          //       // otherwise.
-          //       if (_formKey.currentState.validate()) {
-          //         Scaffold.of(context)
-          //             .showSnackBar(SnackBar(content: Text('success of success')));
-          //         _register();
-          //       } else {
-          //         Scaffold.of(context)
-          //             .showSnackBar(SnackBar(content: Text('Invalid Data')));
-          //       }
-          //     },
-          //     child: Text('Submit'),
-          //   ),
-          // ),
-          // RaisedButton(
-          //   onPressed: () {
-          //     if (_formKey.currentState.validate()) {
-          //       Scaffold.of(context)
-          //           .showSnackBar(SnackBar(content: Text('success of success')));
-          //       _register();
-          //     } else {
-          //       Scaffold.of(context)
-          //           .showSnackBar(SnackBar(content: Text('Invalid Data')));
-          //     }
-          //   },
-          //   padding: EdgeInsets.all(15.0),
-          //   shape: RoundedRectangleBorder(
-          //     borderRadius: BorderRadius.circular(30.0),
-          //   ),
-          //   color: Colors.white,
-          //   child: Text(
-          //     'Register',
-          //     style: TextStyle(
-          //       color: Color(0xFF527DAA),
-          //       letterSpacing: 1.5,
-          //       fontSize: 18.0,
-          //       fontWeight: FontWeight.bold,
-          //       fontFamily: 'OpenSans',
-          //     ),
-          //   ),
-          // ),
+          _buildLoginBtn(),
         ],
       ),
     );

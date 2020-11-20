@@ -9,22 +9,23 @@ class RegisterController extends GetxController {
   UserRepository _userRepository = Get.find<UserRepository>();
 
   final String title = 'Register';
-  PatientModel get patientModel => _userRepository.patientModel;
+  Rx get patientModel => _userRepository.patientModel;
 
   @override
   void onInit() {
     super.onInit();
   }
 
-  Future<PatientModel> register(String email, String password1, String password2,
-                  String name, String surname, String patronymic,
-                  String phone_number, String gender, DateTime birthday) async {
+  Future register(String email, String password1, String password2, String name,
+                  String surname, String patronymic, String phone_number, String gender,
+                  String profession, String address, DateTime birthday) async {
     try {
       print('DateTime birthday: ${birthday}');
       PatientModel patientModel = await _userRepository.register(
                   email, password1, password2, name,
                   surname, patronymic, phone_number,
-                  gender, birthday);
+                  gender, profession, address, birthday);
+      print('PatientModel patientModel - $patientModel');
       if (patientModel != null) {
         return patientModel;
       } else {
@@ -34,12 +35,11 @@ class RegisterController extends GetxController {
     } on NotAuthorizedException catch (e) {
       print(e.message);
       Get.snackbar('Session expired', 'Login to your account');
+    } on DioError catch (e) {
+      Get.snackbar('Error', 'Connection troubles...');
+      print('Dio Error: ${e.message}');
     } catch (e) {
-      if (e is DioError) {
-        Get.snackbar('Error', 'Connection troubles...');
-        print('Dio Error: ${e.message}');
-      }
-      print(e.message);
+      print(e);
     }
   }
 }

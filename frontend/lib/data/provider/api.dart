@@ -4,8 +4,9 @@ import 'package:intl/intl.dart';
 
 import 'package:medecine_app/data/utils/exceptions.dart';
 
-const String baseUrl = 'http://127.0.0.1:8000/';
-// const String baseUrl = 'http://34.89.129.235/';
+// const String baseUrl = 'http://46.98.246.226/';
+const String baseUrl = 'http://localhost:8000/';
+// const String baseUrl = 'http://34.89.129.235:80/';
 
 enum http_method { GET, POST }
 
@@ -17,7 +18,7 @@ class ApiClient {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*"
       },
-      connectTimeout: 10000,
+      connectTimeout: 4000,
       validateStatus: (status) {
         return status < 500;
       });
@@ -36,17 +37,19 @@ class ApiClient {
         'Authorization': 'Authorization-Token $refreshToken'
       });
 
-  Future register(String email, String password1, String password2,
-                  String name, String surname, String patronymic,
-                  String phone_number, String gender, DateTime birthday) async {
+  Future register(String email, String password1, String password2, String name,
+                  String surname, String patronymic, String phone_number, String gender,
+                  String profession, String address, DateTime birthday) async {
     String birthdayStr = DateFormat("yyyy-MM-dd").format(birthday);
+    print('birthday and String: $birthday $birthdayStr');
 
     Response response = await _dio.post(
       '/register',
       data: {
         'email': email, 'password1': password1, 'password2': password2,
         'name': name, 'surname': surname, 'patronymic': patronymic, 
-        'phone_number': phone_number, 'gender': gender, 'birthday': birthdayStr,
+        'phone_number': phone_number, 'gender': gender, 'profession': profession,
+        'address': address, 'birthday': birthdayStr,
       },
     );
     print('api.dart: response - ${response}');
@@ -123,6 +126,36 @@ class ApiClient {
       }
     }
     return response;
+  }
+
+  getAllHospitals() async {
+    return await _authenticatedRequest('/hospitals', method: http_method.GET);
+  }
+
+  getAllHospitalDoctors(hospitalID) async {
+    return await _authenticatedRequest('/hospital/$hospitalID/doctors/',
+        method: http_method.GET);
+  }
+
+  getAllDoctors() {}
+
+  getDoctorProfile() {}
+
+  getPatientByID(userID) async {
+    print('get patient');
+    return await _authenticatedRequest('/profile/patient/$userID',
+        method: http_method.GET);
+  }
+
+  getDoctorByID(userID) async {
+    print('getdoctror');
+    return await _authenticatedRequest('/profile/doctor/$userID',
+        method: http_method.GET);
+  }
+
+  getDiseaseHistoriesById(String userId) async {
+    return await _authenticatedRequest('history/$userId',
+        method: http_method.GET);
   }
 }
 

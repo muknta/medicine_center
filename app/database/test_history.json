@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "author_id": 42,
+    "patient_id": 123,
+    "title": "First history",
+    "date_updated": "2018-12-19 09:26:03",
+    "date_created": "2017-12-19 09:26:03",
+    "diagnosis": "Apchhi",
+    "status": true,
+    "content": "Bla bla bla bla bla bla bla bla",
+    "file_name": "filename_1.pdf"
+  },
+  {
+    "id": 2,
+    "author_id": 42,
+    "patient_id": 123,
+    "title": "Second history",
+    "date_updated": "2019-12-19 09:26:03",
+    "date_created": "2018-12-30 09:26:03",
+    "diagnosis": "Apchhi^2",
+    "status": false,
+    "content": "Bla bla bla bla bla bla bla bla",
+    "file_name": "filename_2.pdf"
+  },
+  {
+    "id": 3,
+    "author_id": 42,
+    "patient_id": 523,
+    "title": "First history",
+    "date_updated": "2019-12-19 09:26:03",
+    "date_created": "2018-12-30 09:26:03",
+    "diagnosis": "Apchhi^623",
+    "status": true,
+    "content": "Bla bla bla bla bla bla bla bla",
+    "file_name": "filename_2.pdf"
+  }
+]

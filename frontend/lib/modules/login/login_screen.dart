@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:medecine_app/data/models/user_model.dart';
 
+import 'package:medecine_app/data/models/user_model.dart';
+import 'package:medecine_app/routes.dart';
 import 'login_controller.dart';
 
 final kHintTextStyle = TextStyle(
@@ -131,7 +132,35 @@ class LoginScreen extends GetView<LoginController> {
         ),
         color: Colors.white,
         child: Text(
-          'LOGIN',
+          'Log In',
+          style: TextStyle(
+            color: Color(0xFF527DAA),
+            letterSpacing: 1.5,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRegisterBtn(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () {
+          Navigator.pushNamed(context, Routes.Register);
+        },
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.white,
+        child: Text(
+          'Register',
           style: TextStyle(
             color: Color(0xFF527DAA),
             letterSpacing: 1.5,
@@ -146,10 +175,10 @@ class LoginScreen extends GetView<LoginController> {
 
   // TODO: Add validator
   Future _login() async {
-    UserModel userModel =
+    var userModel =
         await controller.login(emailController.text, passwordController.text);
     if (userModel != null) {
-      Get.snackbar('Success', 'Logged in!');
+      Get.offAndToNamed(Routes.Patient);
     } else {
       print('something went wrong on login');
     }
@@ -212,6 +241,7 @@ class LoginScreen extends GetView<LoginController> {
                       _buildPasswordTF(),
                       _buildForgotPasswordBtn(),
                       _buildLoginBtn(),
+                      _buildRegisterBtn(context),
                     ],
                   ),
                 ),

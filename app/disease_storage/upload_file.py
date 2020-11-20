@@ -11,7 +11,9 @@ class FileUploader:
         Class for creating a connection to google cloud storage. Object of the class can create bucket, upload
         file to the bucket and download files from the buckets.
     """
-    def __init__(self, json_service_account: str, bucket_name: str):
+
+    def __init__(self, json_service_account: str = JSON_KEYS_SERVICE_ACCOUNT,
+                 bucket_name: str = DISEASE_HISTORY_FILES_NAME):
         """
         Initialize client and getting or creating bucket
 
@@ -46,17 +48,21 @@ class FileUploader:
 
         blob.download_to_filename(storage_file_name if storage_file_name else downloaded_file_name)
 
-    def list_blobs(self):
+    def delete_file(self, filename: str):
+        """
+        Delete blob from the bucket
+        :param filename: name of blob
+        """
+        blob = self.bucket.blob(filename)
+        blob.delete()
+
+    def list_blobs(self) -> list:
         """
         :return: list of blobs in the current bucket
         """
         all_blobs = list(self.client.list_blobs(self.bucket))
 
+        for i in range(len(all_blobs)):
+            all_blobs[i] = all_blobs[i].name
+
         return all_blobs
-
-
-if __name__ == '__main__':
-    file_uploader = FileUploader(JSON_KEYS_SERVICE_ACCOUNT, DISEASE_HISTORY_FILES_NAME)
-
-    lst = file_uploader.list_blobs()
-    print(lst)

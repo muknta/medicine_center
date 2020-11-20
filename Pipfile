@@ -20,6 +20,11 @@ typing_extensions = "*"
 aiofiles = "*"
 passlib = {extras = ["bcrypt"],version = "*"}
 pipfile = "*"
+fastapi-utils = "*"
+google-cloud = "*"
+google-cloud-storage = "*"
+python-multipart = "*"
+starlette = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.6"

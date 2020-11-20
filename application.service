@@ -1,0 +1,11 @@
+[Unit]
+Description=MedicineCenterApplication
+
+[Service]
+WorkingDirectory=/opt/medicine_center/
+ExecStart=/usr/bin/python3 /opt/medicine_center/run.py
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

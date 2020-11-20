@@ -1,13 +1,64 @@
+import 'package:intl/intl.dart';
+
 class PatientModel {
-  final int id;
-  final String email, name, surname, patronymic, phone_number, gender;
-  final DateTime birthday;
+  PatientModel({
+    this.id,
+    this.userId,
+    this.profession,
+    this.conditions,
+    this.email,
+    this.role,
+    this.name,
+    this.surname,
+    this.phoneNumber,
+    this.patronymic,
+    this.address,
+    this.gender,
+    this.birthday,
+  });
 
-  PatientModel(this.id, [this.email, this.name, this.surname,
-  	this.patronymic, this.phone_number, this.gender, this.birthday]);
+  String id;
+  String userId;
+  String profession;
+  String conditions;
+  String email;
+  String role;
+  String name;
+  String surname;
+  String phoneNumber;
+  String address;
+  String patronymic;
+  String gender;
+  DateTime birthday;
 
-  factory PatientModel.fromJson(Map json) {
-    final id = json['id'];
-    return PatientModel(id);
-  }
+  factory PatientModel.fromJson(Map<String, dynamic> json) => PatientModel(
+        id: json["_id"],
+        userId: json["user_id"],
+        profession: json["profession"],
+        conditions: json["conditions"],
+        email: json["email"],
+        role: json["role"],
+        name: json["name"],
+        surname: json["surname"],
+        phoneNumber: json["phone_number"],
+        patronymic: json["patronymic"],
+        address: json["address"],
+        gender: json["gender"],
+        birthday: DateFormat("yyyy-MM-dd").parse(json["birthday"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "_id": id,
+        "user_id": userId,
+        "profession": profession,
+        "conditions": conditions,
+        "email": email,
+        "role": role,
+        "name": name,
+        "surname": surname,
+        "phone_number": phoneNumber,
+        "patronymic": patronymic,
+        "gender": gender,
+        "birthday": birthday.toIso8601String(),
+      };
 }

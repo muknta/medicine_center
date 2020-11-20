@@ -2,6 +2,7 @@ from fastapi.params import Depends
 from fastapi_jwt_auth import AuthJWT
 from starlette.responses import FileResponse
 from pydantic import ValidationError
+from datetime import datetime
 
 from app.validators.schemes.login_scheme import LoginScheme
 from app.validators.schemes.patient_create_scheme import RegisterScheme
@@ -24,22 +25,29 @@ def register(user: RegisterScheme):
     try:
         registered_user = UsersCollection.insert_obj({
                 "email": user.email,
-                "password": user.password1,
+                "password": UsersCollection.get_password_hash(user.password1),
                 "name": user.name,
                 "surname": user.surname,
                 "patronymic": user.patronymic,
                 "phone_number": user.phone_number,
                 "gender": user.gender,
-                "birthday": user.birthday,
+                "address": user.address,
+                "profession": user.profession,
+                "birthday": UsersCollection.date_to_datetime(user.birthday),
                 "role": 'patient'
             }
         )
     except ValidationError as e:
         return {"result": False, "msg": e}
-    if registered_user:
-        return {"result": True, 'user_id': str(registered_user['_id'])}
-    return {"result": False, "msg": "Invalid credentials"}
 
+    if registered_user:
+        return {"result": True, 'user_id': str(registered_user['_id']),
+            'email': registered_user['email'], 'role': registered_user['role'],
+            'profession': registered_user['profession'], 'name': registered_user['name'],
+            'surname': registered_user['surname'], 'patronymic': registered_user['patronymic'],
+            'address': registered_user['address'], 'gender': registered_user['gender'],
+            'phone_number': registered_user['phone_number'], 'birthday': registered_user['birthday']}
+    return {"result": False, "msg": "Invalid credentials"}
 
 @router.post('/login')
 def login(user: LoginScheme, Authorize: AuthJWT = Depends()):
@@ -51,7 +59,8 @@ def login(user: LoginScheme, Authorize: AuthJWT = Depends()):
             refresh_token = Authorize.create_refresh_token(subject=registered_user['email'])
             if not DEBUG_LOGIN:
                 app.state.redis.save_tokens(Authorize.get_jti(access_token), Authorize.get_jti(refresh_token))
-            return {"access_token": access_token, "refresh_token": refresh_token, "result": True, 'user_id': str(registered_user['_id'])}
+            return {"access_token": access_token, "refresh_token": refresh_token, "result": True,
+                    "user_id": str(registered_user["_id"]), "role": registered_user["role"]}
     return {"result": False, "msg": "Invalid credentials"}
 
 
