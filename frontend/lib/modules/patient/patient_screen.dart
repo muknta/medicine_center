@@ -9,6 +9,7 @@ import 'package:medecine_app/ui/drawer/base_drawer.dart';
 
 import 'patient_controller.dart';
 
+
 class PatientScreen extends GetView<PatientController> {
   @override
   Widget build(BuildContext context) {
@@ -91,28 +92,21 @@ class PatientScreen extends GetView<PatientController> {
             color: Color(0xFF73AEF5),
             child: new InkWell(
               borderRadius: BorderRadius.circular(20),
-              onTap: () => Get.dialog(Container(
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Obx(
-                        () => ListView.builder(
-                            itemCount: controller.diseaseHistories.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                leading:
-                                    Icon(FlutterIcons.thermometer_alert_mco),
-                                title: Text('Diagnosis: ' +
-                                    controller
-                                        .diseaseHistories[index].value.title),
-                                subtitle: Text('Status: ' +
-                                    controller
-                                        .diseaseHistories[index].value.status),
-                              );
-                            }),
-                      )))),
+              onTap: () => showDialog(
+                  context: Get.context,
+                  builder: (context) => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                                height: 500,
+                                child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: buildDesieaseHistory()))
+                          ])),
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
                 child: Row(
@@ -143,6 +137,93 @@ class PatientScreen extends GetView<PatientController> {
     );
   }
 
+<<<<<<< HEAD
+=======
+  Obx buildDesieaseHistory() {
+    return Obx(() => Container(
+          height: MediaQuery.of(Get.context).size.height / 2,
+          child: ListView.builder(
+              itemCount: controller.diseaseHistories.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                    padding: EdgeInsets.all(18),
+                    child: Card(
+                        // color: Color(0xFF73AEF5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(40.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Icon(FlutterIcons.medicinebox_ant),
+                              Expanded(
+                                  child: Container(
+                                padding: EdgeInsets.only(left: 5),
+                                child: Column(children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: controller
+                                                  .diseaseHistories[index]
+                                                  .value
+                                                  .title,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        '${controller.diseaseHistories[index].value.content}',
+                                      ),
+                                    ],
+                                  ),
+                                ]),
+                              )),
+                              Column(
+                                children: [
+                                  RaisedButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0)),
+                                      onPressed: () => controller
+                                          .downloadHistoryFile(controller
+                                              .diseaseHistories[index]
+                                              .value
+                                              .id),
+                                      child: Column(children: [
+                                        Icon(Icons.download_sharp),
+                                        Text('download')
+                                      ])),
+                                  RaisedButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    onPressed: () async =>
+                                        controller.uploadFile(controller
+                                            .diseaseHistories[index].value.id),
+                                    child: Column(children: [
+                                      Icon(FlutterIcons.file_upload_faw5s),
+                                      Text('upload')
+                                    ]),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        )));
+              }),
+        ));
+  }
+
+>>>>>>> NazarKostetskiy-master
   Row buildAddress(BuildContext context) {
     return Row(
       children: <Widget>[

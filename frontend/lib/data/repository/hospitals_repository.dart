@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:medecine_app/data/models/doctor_model.dart';
 import 'package:medecine_app/data/models/hospital_model.dart';
 import 'package:medecine_app/data/provider/api.dart';
 
@@ -23,5 +24,23 @@ class HospitalsRepository extends GetxService {
         }
       }
     }
+  }
+
+  Future getHospitalDoctors(hospitalID) async {
+    Response response = await _apiClient.getHospitalDoctors(hospitalID);
+    List hospitalDoctors = [];
+    print(response);
+    if (response != null) {
+      Map data = response.data;
+      print('response data: $data');
+      if (data["result"] == true) {
+        final List allDoctorsData = data['data'];
+        for (var doctor in allDoctorsData) {
+          hospitalDoctors.add(DoctorModel.fromJson(doctor));
+        }
+      }
+    }
+    print('hospitalDoctors: $hospitalDoctors');
+    return hospitalDoctors;
   }
 }

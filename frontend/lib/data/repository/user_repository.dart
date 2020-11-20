@@ -22,13 +22,7 @@ class UserRepository extends GetxService {
                   surname, patronymic, phone_number,
                   gender, profession, address, birthday);
     if (response != null) {
-      print('13213');
-      print('birthday - $birthday');
-      print('response.data[birthday] - ${response.data[birthday]}');
-      print(DateFormat("yyyy-MM-dd").parse(response.data['birthday']));
-      print('13213');
       this.patientModel = PatientModel.fromJson(response.data).obs;
-      print('user_repository.dart: this.patientModel ${this.patientModel}');
       return patientModel;
     }
   }
@@ -36,7 +30,6 @@ class UserRepository extends GetxService {
   Future login(String email, String password) async {
     Response response = await _apiClient.login(email, password);
     if (response != null) {
-      print(response.data);
       Map data = response.data;
       final String role = data['role'];
       final userID = data['user_id'];
@@ -44,12 +37,12 @@ class UserRepository extends GetxService {
       var model;
       if (role == "patient") {
         response = await _apiClient.getPatientByID(userID);
-        data = response.data;
+        data = response.data['data'];
         print(data);
         model = PatientModel.fromJson(data).obs;
       } else if (role == 'doctor') {
         response = await _apiClient.getDoctorByID(userID);
-        data = response.data;
+        data = response.data['data'];
         print(data);
         model = DoctorModel.fromJson(data).obs;
       }
@@ -60,8 +53,18 @@ class UserRepository extends GetxService {
     }
   }
 
+  Future uploadHistoryFile(filePath, historyId) async {
+    return await _apiClient.uploadHistoryFile(filePath, historyId);
+  }
+
+  Future downloadHistoryFile(String historyId) async {
+    Response response = await _apiClient.downloadHistoryFile(historyId);
+    print(response.data);
+    return response;
+  }
+
   Future getDiseaseHistoryByUserId(String userId) async {
-    Response response = await _apiClient.getDiseaseHistoriesById(userId);
+    Response response = await _apiClient.getDesiaseHistoriesById(userId);
     if (response != null) {
       print(response.data);
       Map data = response.data;

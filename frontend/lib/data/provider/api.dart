@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
@@ -7,6 +8,7 @@ import 'package:medecine_app/data/utils/exceptions.dart';
 // const String baseUrl = 'http://46.98.246.226/';
 const String baseUrl = 'http://localhost:8000/';
 // const String baseUrl = 'http://34.89.129.235:80/';
+// const String baseUrl = 'http://192.168.1.121:8000/';
 
 enum http_method { GET, POST }
 
@@ -80,6 +82,17 @@ class ApiClient {
     }
   }
 
+  Future uploadHistoryFile(filePath, historyId) async {
+    FormData formdata = FormData.fromMap({
+      "file": await MultipartFile.fromFile(filePath, filename: '$historyId'),
+    });
+    Response response =
+        await _dio.post("history/uploadfile/$historyId", data: formdata);
+    print(response);
+    print(response.data);
+    return response;
+  }
+
   Future _authenticatedRequest(path,
       {method = http_method.POST, data = const {}}) async {
     Function request;
@@ -88,8 +101,6 @@ class ApiClient {
     } else if (method == http_method.POST) {
       request = () => _dio.post(path, data: data, options: authHeaderOptions);
     }
-    print(accessToken);
-    print('refresh : $_refreshToken');
     Response response = await request();
     if (response.statusCode == 200) {
       return response;
@@ -132,7 +143,7 @@ class ApiClient {
     return await _authenticatedRequest('/hospitals', method: http_method.GET);
   }
 
-  getAllHospitalDoctors(hospitalID) async {
+  getHospitalDoctors(hospitalID) async {
     return await _authenticatedRequest('/hospital/$hospitalID/doctors/',
         method: http_method.GET);
   }
@@ -155,6 +166,11 @@ class ApiClient {
 
   getDiseaseHistoriesById(String userId) async {
     return await _authenticatedRequest('history/$userId',
+        method: http_method.GET);
+  }
+
+  downloadHistoryFile(String historyId) async {
+    return await _authenticatedRequest('history/download/$historyId',
         method: http_method.GET);
   }
 }

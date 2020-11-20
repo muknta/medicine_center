@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import 'package:medecine_app/data/models/user_model.dart';
 import 'package:medecine_app/routes.dart';
 import 'login_controller.dart';
 

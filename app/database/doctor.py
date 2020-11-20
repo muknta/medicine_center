@@ -7,10 +7,6 @@ class DoctorsCollection(MongoBase):
     db_fields: Sequence[Tuple[str]] = ('_id', 'user_id', 'hospital_id', 'rating', 'positing')
 
     @classmethod
-    def get_one_obj(cls, filter, projection=None):
-        return {'data': cls.to_json(cls.collection.find_one(filter, projection=projection)), 'result': True}
-
-    @classmethod
     def get_objs(cls, filter, fields=db_fields, projection=None):
         res = list(cls.collection.find(filter, projection=projection))
         res = cls.to_json(res)

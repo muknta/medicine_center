@@ -10,4 +10,11 @@ class HospitalsController extends GetxController {
     super.onInit();
     await hospitalsRepository.getHospitals();
   }
+<<<<<<< HEAD
+=======
+
+  Future getHospitalDoctors(String hospitalId) async {
+    return await hospitalsRepository.getHospitalDoctors(hospitalId);
+  }
+>>>>>>> NazarKostetskiy-master
 }

@@ -10,10 +10,10 @@ class HospitalCollection(MongoBase):
 
 
 if __name__ == '__main__':
-    # HospitalCollection.insert_obj({
-    #     'name': 'Northwestern Memorial Hospital',
-    #     'address': "251 E Huron St, Chicago, IL 60611, USA",
-    #     'phone_number': "+1 312-926-2000"
-    # })
+    HospitalCollection.insert_obj({
+        'name': 'Annie Penn Hospital',
+        'address': "618 S Main St Reidsville, NC 27320, USA",
+        'phone_number': "+1 336-951-4000"
+    })
 
-    print(HospitalCollection.delete_obj_by_id('5fb56287bc19d237a79692fc'))
+    print(HospitalCollection.get_all_objects())

@@ -1,6 +1,10 @@
 import bson
 import abc
+from bson.objectid import ObjectId
+from bson.errors import InvalidId
+
 from pymongo import MongoClient
+
 from config import DATABASE_NAME, DB_SOURCE
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -49,7 +53,7 @@ class MongoBase(abc.ABC, metaclass=Meta):
                 filter['_id'] = ObjectId(filter['_id'])
             except InvalidId:
                 return
-        return cls.collection.find_one(filter, projection=projection)
+        return cls.to_json(cls.collection.find_one(filter, projection=projection))
 
     @classmethod
     def insert_obj(cls, data: dict):

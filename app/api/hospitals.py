@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 
-from app.database.hospital import HospitalCollection
-from app.database.doctor import DoctorsCollection
+from app.api.repository import Repository
 
 
 router = APIRouter()
@@ -11,14 +10,10 @@ router = APIRouter()
 async def get_hospital_profile(hospital_id: str):
     """
     Get data for hospital profile
-
     """
-    hospital_data =HospitalCollection.to_json( HospitalCollection.get_one_obj({'_id': hospital_id})['data'])
+    hospital_profile = Repository.get_hospital_by_id(hospital_id)
 
-    if not hospital_data:
-        return {'data': {}, 'result': False}, 200
-
-    return {'data': hospital_data, 'result': True}
+    return {'data': hospital_profile, 'result': bool(hospital_profile)}
 
 
 @router.get('/hospitals')
@@ -27,8 +22,9 @@ async def get_all_hospitals():
     Get all hospitals from database
     :return: list of hospitals
     """
+    list_hospitals = Repository.get_all_hospitals()
 
-    return {'data': HospitalCollection.to_json(HospitalCollection.get_all_objects()['data']), 'result': True}
+    return {'data': list_hospitals, 'result': bool(list_hospitals)}
 
 
 @router.get('/hospital/{hospital_id}/doctors/')
@@ -38,9 +34,7 @@ async def get_hospitals_doctors(hospital_id: str):
     :param hospital_id: hospital's id
     :return: list of doctors
     """
-    res = DoctorsCollection.to_json(DoctorsCollection.get_objs({'hospital_id': hospital_id}))
+    list_doctors = Repository.get_doctors_by_hospital_id(hospital_id)
 
-    if not res:
-        return {'data': {}, 'result': False}, 200
-
-    return {'data': res, 'result': True}
+    return {'data': list_doctors, 'result': bool(list_doctors)}
+    

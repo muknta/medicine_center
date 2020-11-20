@@ -29,11 +29,10 @@ class LoginController extends GetxController {
     } on NotAuthorizedException catch (e) {
       print(e.message);
       Get.snackbar('Session expired', 'Login to your account');
+    } on DioError catch (e) {
+      Get.snackbar('Error', 'Connection troubles...');
+      print('Dio Error: ${e.message}');
     } catch (e) {
-      if (e is DioError) {
-        Get.snackbar('Error', 'Connection troubles...');
-        print('Dio Error: ${e.message}');
-      }
       print(e);
     }
   }

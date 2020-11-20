@@ -1,8 +1,6 @@
 from fastapi import APIRouter
-from bson.objectid import ObjectId
 
-from app.database.patient import PatientsCollection
-from app.database.users import UsersCollection
+from app.api.repository import Repository
 
 router = APIRouter()
 
@@ -15,39 +13,18 @@ async def get_patient_profile(user_id: str):
     :param user_id: Id of user in database
     :return: patient data
     """
+    patient_profile = Repository.get_patient_by_id(user_id)
 
-    user = UsersCollection.get_one_obj({'_id': user_id})
-    if user:
-        user_data = UsersCollection.to_json(user)
-        patient = PatientsCollection.get_one_obj({'user_id': user_id})
-        if not patient:
-            return {'data': {}, 'result': False}, 200
-
-        patient_data = PatientsCollection.to_json(patient)
-        res = {**patient_data, **user_data}
-        del res['password']
-        return res
-
-    return {'data': {}, 'result': False}
+    return {'data': patient_profile, 'result': bool(patient_profile)}
 
 
 @router.get('/patients/')
 async def get_all_patient():
     """
     Get all patients from database
-    :return: list of doctors
+
+    :return: list of patients
     """
-    list_patient = PatientsCollection.get_all_objects()['data']
+    list_patients = Repository.get_all_patients()
 
-    if not list_patient:
-        return {'data': {}, 'result': False}, 200
-
-    for i in range(len(list_patient)):
-        user = UsersCollection.get_one_obj({'_id': list_patient[i]['user_id']})
-        if user and list_patient:
-            user_data = UsersCollection.to_json(user)
-            list_patient[i] = {**list_patient[i], **user_data}
-
-            del list_patient[i]['password']
-
-    return {'data': list_patient, 'result': True}
+    return {'data': list_patients, 'result': bool(list_patients)}

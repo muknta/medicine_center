@@ -4,11 +4,11 @@ from typing import Sequence, Tuple
 
 class PatientsCollection(MongoBase):
     collection_name: str = 'patient'
-    db_fields: Sequence[Tuple[str]] = ('_id', 'user_id', 'profession', 'conditions')
+    db_fields: Sequence[Tuple[str]] = ('_id', 'user_id', 'profession', 'conditions', 'address')
 
-    @classmethod
-    def get_one_obj(cls, filter, projection=None):
-        return {'data': cls.to_json(cls.collection.find_one(filter, projection=projection)), 'result': True}
+    # @classmethod
+    # def get_one_obj(cls, filter, projection=None):
+    #     return {'data': cls.to_json(cls.collection.find_one(filter, projection=projection)), 'result': True}
 
 
 if __name__ == '__main__':
