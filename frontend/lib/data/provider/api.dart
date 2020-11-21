@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:medecine_app/data/utils/exceptions.dart';
 
 // const String baseUrl = 'http://46.98.246.226/';
-const String baseUrl = 'http://localhost:8000/';
-// const String baseUrl = 'http://34.89.129.235:80/';
+// const String baseUrl = 'http://localhost:8000/';
+const String baseUrl = 'http://34.89.129.235:80/';
 // const String baseUrl = 'http://192.168.1.121:8000/';
 
 enum http_method { GET, POST }
@@ -56,7 +56,6 @@ class ApiClient {
     );
     print('api.dart: response - ${response}');
     if (response.statusCode == 200) {
-      print('api.dart: response.data - ${response.data}');
       if (response.data["result"] == true) {
         return response;
       }
@@ -153,13 +152,13 @@ class ApiClient {
   getDoctorProfile() {}
 
   getPatientByID(userID) async {
-    print('get patient');
+    print('get patient $userID');
     return await _authenticatedRequest('/profile/patient/$userID',
         method: http_method.GET);
   }
 
   getDoctorByID(userID) async {
-    print('getdoctror');
+    print('get doctor $userID');
     return await _authenticatedRequest('/profile/doctor/$userID',
         method: http_method.GET);
   }

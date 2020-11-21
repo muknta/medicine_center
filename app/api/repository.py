@@ -66,9 +66,9 @@ class Repository:
         Insert to collection new object
         :param collection: Collection name
         :param obj: New object
-        :return:
+        :return: new collection data
         """
-        collection.insert_obj(dict(obj))
+        return collection.insert_obj(dict(obj))
 
     @classmethod
     def __update_obj(cls, collection, obj_id, new_obj):
@@ -142,6 +142,14 @@ class Repository:
     @classmethod
     def add_history(cls, history):
         cls.__insert_obj_to_collection(HistoriesCollection, history)
+        
+    @classmethod
+    def add_patient(cls, patient):
+        return cls.__insert_obj_to_collection(PatientsCollection, patient)
+
+    @classmethod
+    def add_user(cls, user):
+        return cls.__insert_obj_to_collection(UsersCollection, user)
 
     @classmethod
     def update_history(cls, history_id, history):

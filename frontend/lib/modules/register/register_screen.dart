@@ -420,8 +420,8 @@ class RegisterFormState extends State<RegisterForm> {
   }
 
   Future<void> _register() async {
-    print('email ${emailController.text} - ${emailController}, pass1 ${password1Controller.text}, pass2 ${password2Controller.text}, name ${nameController.text}, surname ${surnameController.text}, patro ${patronymicController.text}, phone ${phoneController.text}, gender ${genderController.text}');
-    print('birthdayController ${birthdayController.text}');
+    // print('email ${emailController.text} - ${emailController}, pass1 ${password1Controller.text}, pass2 ${password2Controller.text}, name ${nameController.text}, surname ${surnameController.text}, patro ${patronymicController.text}, phone ${phoneController.text}, gender ${genderController.text}');
+    // print('birthdayController ${birthdayController.text}');
     Rx patientModel =
         await widget.controller.register(emailController.text, password1Controller.text, password2Controller.text,
                       nameController.text, surnameController.text, patronymicController.text,

@@ -7,6 +7,7 @@ from datetime import datetime
 from app.validators.schemes.login_scheme import LoginScheme
 from app.validators.schemes.patient_create_scheme import RegisterScheme
 from app.database.users import UsersCollection
+from app.api.repository import Repository
 from app.main import app
 from fastapi import APIRouter
 
@@ -22,25 +23,34 @@ def init():
 
 @router.post('/register')
 def register(user: RegisterScheme):
+    # TODO: Unique email
     try:
-        registered_user = UsersCollection.insert_obj({
-                "email": user.email,
-                "password": UsersCollection.get_password_hash(user.password1),
-                "name": user.name,
-                "surname": user.surname,
-                "patronymic": user.patronymic,
-                "phone_number": user.phone_number,
-                "gender": user.gender,
-                "address": user.address,
-                "profession": user.profession,
-                "birthday": UsersCollection.date_to_datetime(user.birthday),
-                "role": 'patient'
-            }
-        )
+        registered_user = Repository.add_user({
+            "email": user.email,
+            "password": UsersCollection.get_password_hash(user.password1),
+            "name": user.name,
+            "surname": user.surname,
+            "patronymic": user.patronymic,
+            "phone_number": user.phone_number,
+            "gender": user.gender,
+            "address": user.address,
+            "profession": user.profession,
+            "birthday": UsersCollection.date_to_datetime(user.birthday),
+            "role": 'patient'
+        })
     except ValidationError as e:
         return {"result": False, "msg": e}
 
     if registered_user:
+        if registered_user['role'] == 'patient':
+            try:
+                Repository.add_patient({
+                    "user_id": str(registered_user['_id']),
+                    "address": registered_user['address'],
+                    "profession": registered_user['profession']
+                })
+            except ValidationError as e:
+                return {"result": False, "msg": e}
         return {"result": True, 'user_id': str(registered_user['_id']),
             'email': registered_user['email'], 'role': registered_user['role'],
             'profession': registered_user['profession'], 'name': registered_user['name'],

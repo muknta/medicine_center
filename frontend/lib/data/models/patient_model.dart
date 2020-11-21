@@ -4,61 +4,62 @@ class PatientModel {
   PatientModel({
     this.id,
     this.userId,
-    this.profession,
-    this.conditions,
     this.email,
+    this.conditions,
     this.role,
     this.name,
     this.surname,
-    this.phoneNumber,
     this.patronymic,
-    this.address,
+    this.phoneNumber,
     this.gender,
+    this.profession,
+    this.address,
     this.birthday,
   });
 
   String id;
   String userId;
-  String profession;
   String conditions;
   String email;
   String role;
   String name;
   String surname;
-  String phoneNumber;
-  String address;
   String patronymic;
+  String phoneNumber;
   String gender;
+  String profession;
+  String address;
   DateTime birthday;
 
   factory PatientModel.fromJson(Map<String, dynamic> json) => PatientModel(
         id: json["_id"],
         userId: json["user_id"],
-        profession: json["profession"],
         conditions: json["conditions"],
         email: json["email"],
         role: json["role"],
         name: json["name"],
         surname: json["surname"],
-        phoneNumber: json["phone_number"],
         patronymic: json["patronymic"],
-        address: json["address"],
+        phoneNumber: json["phone_number"],
         gender: json["gender"],
+        profession: json["profession"],
+        address: json["address"],
         birthday: DateFormat("yyyy-MM-dd").parse(json["birthday"]),
       );
 
   Map<String, dynamic> toJson() => {
         "_id": id,
         "user_id": userId,
-        "profession": profession,
         "conditions": conditions,
         "email": email,
         "role": role,
         "name": name,
         "surname": surname,
-        "phone_number": phoneNumber,
         "patronymic": patronymic,
+        "phone_number": phoneNumber,
         "gender": gender,
+        "profession": profession,
+        "address": address,
         "birthday": birthday.toIso8601String(),
       };
 }
