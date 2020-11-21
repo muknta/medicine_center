@@ -59,5 +59,8 @@ class PatientModel {
         "gender": gender,
         "birthday": birthday.toIso8601String(),
       };
+<<<<<<< HEAD
+>>>>>>> 913ce924a241ffae79bd53bf649b3fbc9d36e6df
+=======
 >>>>>>> 913ce924a241ffae79bd53bf649b3fbc9d36e6df
 }
