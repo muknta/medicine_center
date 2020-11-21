@@ -44,7 +44,7 @@ class ApiClient {
                   String surname, String patronymic, String phone_number, String gender,
                   String profession, String address, DateTime birthday) async {
     String birthdayStr = DateFormat("yyyy-MM-dd").format(birthday);
-    print('birthday and String: $birthday $birthdayStr');
+    // print('birthday and String: $birthday $birthdayStr');
 
     Response response = await _dio.post(
       '/register',

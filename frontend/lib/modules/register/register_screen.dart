@@ -165,7 +165,7 @@ class RegisterFormState extends State<RegisterForm> {
   }
 
   String _validateValueByTitle(String value, String title) {
-    print('frontend validation: val, tit $value, $title');
+    // print('frontend validation: val, tit $value, $title');
     switch(title) {
       case 'Email': { 
         RegExp regExp = new RegExp(
