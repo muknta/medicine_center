@@ -25,6 +25,7 @@ google-cloud = "*"
 google-cloud-storage = "*"
 python-multipart = "*"
 starlette = "*"
+websockets = "*"
 
 [requires]
 python_version = "3.6"

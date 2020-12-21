@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:medecine_app/data/models/doctor_model.dart';
+import 'package:medecine_app/data/models/schedule_model.dart';
 import 'package:medecine_app/data/provider/api.dart';
 
 class DoctorsRepository extends GetxService {
@@ -27,5 +28,32 @@ class DoctorsRepository extends GetxService {
         return DoctorModel.fromJson(doctor).obs;
       }
     }
+  }
+
+  getScheduleByDoctorId(String doctorId) async {
+    Response response = await _apiClient.getScheduleByDoctorId(doctorId);
+    print(response.data);
+
+    List doctorSchedules = [];
+    if (response != null) {
+      print('1');
+      Map data = response.data;
+      if (data["result"] == true) {
+        print('2');
+
+        final List scheduleAllData = data['data'];
+        print('3: $scheduleAllData length: ${scheduleAllData.length}');
+
+        scheduleAllData.forEach((element) {
+          print('element: $element, elementType: ${element.runtimeType}');
+
+          final schedule = ScheduleModel.fromJson(element);
+          print('schedule: $schedule');
+          doctorSchedules.add(schedule);
+        });
+        print('4: $doctorSchedules');
+      }
+    }
+    return doctorSchedules;
   }
 }

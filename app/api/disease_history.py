@@ -95,8 +95,6 @@ async def upload_file(history_id: str, file: UploadFile = File(...)):
             file_uploader = FileUploader()
             file_uploader.upload_file('app/disease_storage/' + new_filename, new_filename)
 
-            os.remove('app/disease_storage/' + new_filename)
-
             Repository.update_history(history_id, {'file_name': new_filename})
 
             return {'description': 'Success add file', 'result': True}
@@ -124,3 +122,22 @@ async def download_file(history_id: str):
         return FileResponse('app/disease_storage/' + filename, media_type='application/octet-stream', filename=filename)
 
     return {'description': 'Can\'n found history by this id', 'result': False}
+
+
+@router.delete('/file/delete/{history_id}')
+async def delete_file(history_id: str):
+    filename = Repository.get_history_by_id(history_id).get('file_name')
+
+    if filename:
+        file_uploader = FileUploader()
+
+        if filename in file_uploader.list_blobs():
+            file_uploader.delete_file(filename)
+        else:
+            Repository.update_history(history_id, {'file_name': None})
+            return {"description": "File not found", 'result': False}
+
+        Repository.update_history(history_id, {'file_name': None})
+        return {"description": "File was successful deleted", 'result': True}
+
+    return {"description": "File not found", 'result': False}

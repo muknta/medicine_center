@@ -21,4 +21,11 @@ class DoctorController extends GetxController {
       return userData;
     }
   }
+
+  Future getScheduleByDoctorId(String doctorId) async {
+    List doctorSchedules =
+        await doctorsRepository.getScheduleByDoctorId(doctorId);
+    print('doctorSchedules:$doctorSchedules');
+    return doctorSchedules;
+  }
 }

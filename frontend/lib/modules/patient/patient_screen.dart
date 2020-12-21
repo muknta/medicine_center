@@ -84,7 +84,6 @@ class PatientScreen extends GetView<PatientController> {
         SizedBox(
           height: 22,
         ),
-
         Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
@@ -139,41 +138,50 @@ class PatientScreen extends GetView<PatientController> {
 
   Obx buildDesieaseHistory() {
     return Obx(() => Container(
-      height: MediaQuery.of(Get.context).size.height / 2,
-      child: ListView.builder(
-        itemCount: controller.diseaseHistories.length,
-        itemBuilder: (context, index) {
-          return Padding(
-              padding: EdgeInsets.all(18),
-              child: Card(
-                  // color: Color(0xFF73AEF5),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(40.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Icon(FlutterIcons.medicinebox_ant),
-                        Expanded(
-                            child: Container(
-                          padding: EdgeInsets.only(left: 5),
-                          child: Column(children: [
-                            Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                              children: <Widget>[
-                                RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: controller
-                                            .diseaseHistories[index]
-                                            .value
-                                            .title,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+          height: MediaQuery.of(Get.context).size.height / 2,
+          width: MediaQuery.of(Get.context).size.width > 650
+              ? 650
+              : MediaQuery.of(Get.context).size.width,
+          child: ListView.builder(
+              itemCount: controller.diseaseHistories.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                    padding: EdgeInsets.all(18),
+                    child: Card(
+                        // color: Color(0xFF73AEF5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(40.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Icon(FlutterIcons.medicinebox_ant),
+                              Expanded(
+                                  child: Container(
+                                padding: EdgeInsets.only(left: 5),
+                                child: Column(children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: controller
+                                                  .diseaseHistories[index]
+                                                  .value
+                                                  .title,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        '${controller.diseaseHistories[index].value.content}',
                                       ),
                                     ],
                                   ),
@@ -289,16 +297,14 @@ class PatientScreen extends GetView<PatientController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Obx(() {
-                  print(controller.userModel?.value);
                   return Text(
                     '${controller.userModel?.value?.name}',
                     style: TextStyle(fontSize: 24),
                   );
                 }),
                 Obx(() {
-                  print(controller.userModel?.value?.surname);
                   return Text(
-                    '${controller.userModel?.value?.name}',
+                    '${controller.userModel?.value?.surname}',
                     style: TextStyle(fontSize: 24),
                   );
                 }),

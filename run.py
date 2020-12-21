@@ -9,9 +9,12 @@ from starlette.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_utils.tasks import repeat_every
 
-from app.api import auth, default, hospitals, disease_history, doctors, patients, schedule
+from app.api import auth, default, hospitals, disease_history, doctors, patients, schedule, appointment
 from app.main import app
 from app.storage.token_storage import RedisTokenStorage
+from chat.api import message, repository
+from chat.main import chat
+
 from config import JwtSettings, DEBUG_LOGIN, CLEARED_DIR, DISEASE_HISTORY_STATE_FILES
 
 
@@ -71,7 +74,9 @@ app.include_router(disease_history.router, prefix='/history', tags=['history'])
 app.include_router(doctors.router, tags=['doctors'])
 app.include_router(patients.router, tags=['patients'])
 app.include_router(schedule.router, tags=['schedules'])
+app.include_router(appointment.router, tags=['appointments'])
 app.mount("/static", StaticFiles(directory="static"), name='static')
+chat.include_router(message.router, tags=['messages'])
 
 app.add_middleware(
     CORSMiddleware,
@@ -88,3 +93,4 @@ app.mount("/profile", StaticFiles(directory="static/assets/assets"), name='asset
 
 if __name__ == '__main__':
     uvicorn.run("run:app", host='0.0.0.0', port=80)
+    uvicorn.run("run:chat", host='0.0.0.1', port=8080)

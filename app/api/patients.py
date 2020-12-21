@@ -17,6 +17,17 @@ async def get_patient_profile(user_id: str):
 
     return {'data': patient_profile, 'result': bool(patient_profile)}
 
+@router.post('/patients/search/')
+async def get_patients_by_filter(filter:dict):
+    """
+    Get patients list by attributes for search engine.
+
+    :param filter: dict (column:"value") of attributes to search for.
+    :return: list of patients.
+    """
+    patients = Repository.get_patient_by_dict(filter)
+
+    return patients
 
 @router.get('/patients/')
 async def get_all_patient():

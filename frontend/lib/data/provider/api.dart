@@ -1,17 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
-
+import 'package:path_provider/path_provider.dart';
+import 'package:medecine_app/config.dart';
 import 'package:medecine_app/data/utils/exceptions.dart';
 
-// const String baseUrl = 'http://46.98.246.226/';
-// const String baseUrl = 'http://localhost:8000/';
-const String baseUrl = 'http://34.89.129.235:80/';
-// const String baseUrl = 'http://192.168.1.121:8000/';
 
-enum http_method { GET, POST }
+enum http_method { GET, POST, DOWNLOAD }
 
 class ApiClient {
   static BaseOptions _baseOptions = BaseOptions(
@@ -40,19 +37,35 @@ class ApiClient {
         'Authorization': 'Authorization-Token $refreshToken'
       });
 
-  Future register(String email, String password1, String password2, String name,
-                  String surname, String patronymic, String phone_number, String gender,
-                  String profession, String address, DateTime birthday) async {
+  Future register(
+      String email,
+      String password1,
+      String password2,
+      String name,
+      String surname,
+      String patronymic,
+      String phone_number,
+      String gender,
+      String profession,
+      String address,
+      DateTime birthday) async {
     String birthdayStr = DateFormat("yyyy-MM-dd").format(birthday);
     // print('birthday and String: $birthday $birthdayStr');
 
     Response response = await _dio.post(
       '/register',
       data: {
-        'email': email, 'password1': password1, 'password2': password2,
-        'name': name, 'surname': surname, 'patronymic': patronymic, 
-        'phone_number': phone_number, 'gender': gender, 'profession': profession,
-        'address': address, 'birthday': birthdayStr,
+        'email': email,
+        'password1': password1,
+        'password2': password2,
+        'name': name,
+        'surname': surname,
+        'patronymic': patronymic,
+        'phone_number': phone_number,
+        'gender': gender,
+        'profession': profession,
+        'address': address,
+        'birthday': birthdayStr,
       },
     );
     print('api.dart: response - ${response}');
@@ -100,6 +113,12 @@ class ApiClient {
       request = () => _dio.get(path, options: authHeaderOptions);
     } else if (method == http_method.POST) {
       request = () => _dio.post(path, data: data, options: authHeaderOptions);
+    } else if (method == http_method.DOWNLOAD) {
+      Directory appDocDir = await getExternalStorageDirectory();
+      String appDocPath = '${appDocDir.path}${Random().nextInt(10000000)}.pdf';
+      recieveCallback(a, b) => print('recieved data');
+      request = () => _dio.download(path, appDocPath,
+          onReceiveProgress: recieveCallback, options: authHeaderOptions);
     }
     Response response = await request();
     if (response.statusCode == 200) {
@@ -148,6 +167,11 @@ class ApiClient {
         method: http_method.GET);
   }
 
+  getScheduleByDoctorId(doctorId) async {
+    return await _authenticatedRequest('/schedule/$doctorId',
+        method: http_method.GET);
+  }
+
   getAllDoctors() {}
 
   getDoctorProfile() {}
@@ -171,7 +195,7 @@ class ApiClient {
 
   downloadHistoryFile(String historyId) async {
     return await _authenticatedRequest('history/download/$historyId',
-        method: http_method.GET);
+        method: http_method.DOWNLOAD);
   }
 }
 
