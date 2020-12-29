@@ -12,7 +12,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8000 80
 
-ADD mongo-init.js /docker-entrypoint-initdb.d/
-
 RUN cd /usr/src/app/
 CMD ["uvicorn", "run:app", "--host", "0.0.0.0", "--port", "80"]
