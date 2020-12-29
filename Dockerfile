@@ -10,7 +10,6 @@ COPY . /usr/src/app/
 RUN pip install pipenv
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /code/
 EXPOSE 8000 80
 
 ADD mongo-init.js /docker-entrypoint-initdb.d/
