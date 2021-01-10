@@ -9,10 +9,12 @@ from app.data.database import UsersCollection
 from app.data.repository import Repository
 from app.main import app
 from fastapi import APIRouter
+from logging import getLogger
 
 from config import DEBUG_LOGIN
 
 router = APIRouter()
+logger = getLogger(__name__)
 
 
 @router.get('/')
@@ -70,6 +72,7 @@ def register(user: RegisterScheme, Authorize: AuthJWT = Depends()):
 
 @router.post('/login')
 def login(user: LoginScheme, Authorize: AuthJWT = Depends()):
+    logger.info('Login attempt')
     registered_user = UsersCollection.get_one_obj({"email": user.email})
     if registered_user:
         password_correct = UsersCollection.verify_password(user.password, registered_user['password'])
