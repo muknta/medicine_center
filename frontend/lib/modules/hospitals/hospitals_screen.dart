@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:medecine_app/modules/hospitals/hospital_controller.dart';
 import 'package:medecine_app/routes.dart';
 import 'package:medecine_app/ui/appbar/base_appbar.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
+
 
 class HospitalsScreen extends GetView<HospitalsController> {
   @override
